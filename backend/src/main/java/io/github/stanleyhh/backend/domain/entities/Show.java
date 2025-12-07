@@ -51,7 +51,7 @@ public class Show {
 
     private LocalDateTime lastAirDate;
 
-    private String image;
+    private String imageUrl;
 
     @ManyToMany
     @JoinTable(
@@ -76,11 +76,11 @@ public class Show {
         return Objects.equals(id, show.id) && Objects.equals(title, show.title)
                 && Objects.equals(originalTitle, show.originalTitle) && status == show.status
                 && Objects.equals(firstAirDate, show.firstAirDate) && Objects.equals(lastAirDate, show.lastAirDate)
-                && Objects.equals(image, show.image);
+                && Objects.equals(imageUrl, show.imageUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, originalTitle, status, firstAirDate, lastAirDate, image);
+        return Objects.hash(id, title, originalTitle, status, firstAirDate, lastAirDate, imageUrl);
     }
 }
