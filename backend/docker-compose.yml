@@ -1,0 +1,16 @@
+name: shelf-backend
+services:
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
+
+#Docker Compose reads the .env file and
+#does not see the environment variables defined in IntelliJ.
+# .env:
+#POSTGRESQL_PASSWORD=... // password
+
+#Edit Configurations... -> Environment variables → Browse for .env files and scripts → `.env`
