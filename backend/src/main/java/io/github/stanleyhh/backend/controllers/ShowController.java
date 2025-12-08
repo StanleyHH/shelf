@@ -1,15 +1,17 @@
 package io.github.stanleyhh.backend.controllers;
 
+import io.github.stanleyhh.backend.domain.dtos.PageResponse;
 import io.github.stanleyhh.backend.domain.dtos.ShowListItemDto;
+import io.github.stanleyhh.backend.domain.entities.Show;
 import io.github.stanleyhh.backend.mappers.ShowMapper;
 import io.github.stanleyhh.backend.services.ShowService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/shows")
@@ -19,12 +21,17 @@ public class ShowController {
     private final ShowMapper showMapper;
 
     @GetMapping
-    public ResponseEntity<List<ShowListItemDto>> getAllShows() {
-        List<ShowListItemDto> showDtos = showService
-                .getAllShows()
-                .stream()
-                .map(showMapper::toShowListItemDto)
-                .toList();
-        return ResponseEntity.ok(showDtos);
+    public PageResponse<ShowListItemDto> getAllShows(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        Page<Show> shows = showService.getAllShows(PageRequest.of(page - 1, size));
+        return new PageResponse<>(
+                shows.getContent().stream().map(showMapper::toShowListItemDto).toList(),
+                shows.getNumber() + 1,
+                shows.getSize(),
+                shows.getTotalElements(),
+                shows.getTotalPages()
+        );
     }
 }

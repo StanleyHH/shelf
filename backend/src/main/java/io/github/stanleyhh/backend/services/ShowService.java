@@ -1,9 +1,9 @@
 package io.github.stanleyhh.backend.services;
 
 import io.github.stanleyhh.backend.domain.entities.Show;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ShowService {
-    List<Show> getAllShows();
+    Page<Show> getAllShows(Pageable pageable);
 }
