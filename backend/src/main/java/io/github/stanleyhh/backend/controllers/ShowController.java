@@ -27,7 +27,7 @@ public class ShowController {
     ) {
         Page<Show> shows = showService.getAllShows(PageRequest.of(page - 1, size));
         return new PageResponse<>(
-                shows.getContent().stream().map(showMapper::toShowListResponseDto).toList(),
+                shows.map(showMapper::toShowListResponseDto).getContent(),
                 shows.getNumber() + 1,
                 shows.getSize(),
                 shows.getTotalElements(),
