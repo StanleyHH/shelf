@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ShowListItemDto {
+public class ShowListResponseDto {
     private UUID id;
     private String title;
     private String originalTitle;

@@ -1,6 +1,6 @@
 package io.github.stanleyhh.backend.mappers;
 
-import io.github.stanleyhh.backend.domain.dtos.ShowListItemDto;
+import io.github.stanleyhh.backend.domain.dtos.ShowListResponseDto;
 import io.github.stanleyhh.backend.domain.entities.Country;
 import io.github.stanleyhh.backend.domain.entities.Genre;
 import io.github.stanleyhh.backend.domain.entities.Show;
@@ -20,7 +20,7 @@ public interface ShowMapper {
     @Mapping(target = "startYear", source = "firstAirDate", qualifiedByName = "getStartYear")
     @Mapping(target = "countries", source = "countries", qualifiedByName = "getCountriesIds")
     @Mapping(target = "genres", source = "genres", qualifiedByName = "getGenresIds")
-    ShowListItemDto toShowListItemDto(Show show);
+    ShowListResponseDto toShowListResponseDto(Show show);
 
     @Named("getStartYear")
     default Integer getStartYear(LocalDateTime firstAirDate) {

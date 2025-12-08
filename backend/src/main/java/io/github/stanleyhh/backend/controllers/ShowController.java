@@ -1,7 +1,7 @@
 package io.github.stanleyhh.backend.controllers;
 
 import io.github.stanleyhh.backend.domain.dtos.PageResponse;
-import io.github.stanleyhh.backend.domain.dtos.ShowListItemDto;
+import io.github.stanleyhh.backend.domain.dtos.ShowListResponseDto;
 import io.github.stanleyhh.backend.domain.entities.Show;
 import io.github.stanleyhh.backend.mappers.ShowMapper;
 import io.github.stanleyhh.backend.services.ShowService;
@@ -21,13 +21,13 @@ public class ShowController {
     private final ShowMapper showMapper;
 
     @GetMapping
-    public PageResponse<ShowListItemDto> getAllShows(
+    public PageResponse<ShowListResponseDto> getAllShows(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
         Page<Show> shows = showService.getAllShows(PageRequest.of(page - 1, size));
         return new PageResponse<>(
-                shows.getContent().stream().map(showMapper::toShowListItemDto).toList(),
+                shows.getContent().stream().map(showMapper::toShowListResponseDto).toList(),
                 shows.getNumber() + 1,
                 shows.getSize(),
                 shows.getTotalElements(),
