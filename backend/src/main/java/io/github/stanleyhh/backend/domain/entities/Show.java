@@ -13,13 +13,13 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -30,6 +30,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode(exclude = {"countries", "genres"})
 public class Show {
 
     @Id
@@ -68,19 +69,4 @@ public class Show {
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
     private Set<Genre> genres = new HashSet<>();
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Show show = (Show) o;
-        return Objects.equals(id, show.id) && Objects.equals(title, show.title)
-                && Objects.equals(originalTitle, show.originalTitle) && status == show.status
-                && Objects.equals(firstAirDate, show.firstAirDate) && Objects.equals(lastAirDate, show.lastAirDate)
-                && Objects.equals(imageUrl, show.imageUrl);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, originalTitle, status, firstAirDate, lastAirDate, imageUrl);
-    }
 }
