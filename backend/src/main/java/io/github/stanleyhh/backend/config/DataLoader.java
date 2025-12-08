@@ -30,7 +30,8 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (showRepository.count() > 0) {
+
+        if (showRepository.existsBy()) {
             log.info("Database already seeded");
             return;
         }
