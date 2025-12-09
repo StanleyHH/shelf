@@ -1,0 +1,54 @@
+Action
+Adventure
+Adult
+Anime
+Animals/Pets
+Arts & Crafts
+Celebrity
+Celebrities
+Children
+Cinema/Theater
+Comedy
+Competition
+Cooking/Food
+Crime
+Current Events
+Debate
+Discovery/Science
+Drama
+Educational
+Education
+Fashion
+Fashion/Makeup
+Family
+Food
+Horror
+Horror/Supernatural
+How To/Do It Yourself
+Humor
+Interview
+Legal
+Lifestyle
+Literature
+Medical
+Melodrama
+Military/War
+Mystery
+Music
+Nature
+Podcast
+Reality
+Relationships
+Romance/Dating
+Sci-Fi
+Science-Fiction
+Sport
+Spy/Espionage
+Supernatural
+Talk show
+Talent
+Tech
+Thriller
+Triller
+Travel
+Western

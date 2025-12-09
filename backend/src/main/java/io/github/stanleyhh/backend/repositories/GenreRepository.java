@@ -7,5 +7,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface GenreRepository extends JpaRepository<Genre, UUID> {
+
+    boolean existsBy();
+
     Optional<Genre> getGenreByName(String name);
 }
