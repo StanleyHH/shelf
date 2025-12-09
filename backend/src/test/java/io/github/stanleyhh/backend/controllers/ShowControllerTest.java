@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.hasItem;
@@ -47,7 +47,7 @@ class ShowControllerTest {
 
     @BeforeEach
     void setup() {
-        LocalDateTime date = LocalDateTime.now();
+        LocalDate date = LocalDate.now();
         showRepository.deleteAll();
         genreRepository.deleteAll();
         countryRepository.deleteAll();

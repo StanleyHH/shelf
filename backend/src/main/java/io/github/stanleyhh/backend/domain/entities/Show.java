@@ -18,7 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -48,9 +48,9 @@ public class Show {
     private ShowStatus status;
 
     @Column(nullable = false)
-    private LocalDateTime firstAirDate;
+    private LocalDate firstAirDate;
 
-    private LocalDateTime lastAirDate;
+    private LocalDate lastAirDate;
 
     private String imageUrl;
 

@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,7 +23,7 @@ public interface ShowMapper {
     ShowListResponseDto toShowListResponseDto(Show show);
 
     @Named("getStartYear")
-    default Integer getStartYear(LocalDateTime firstAirDate) {
+    default Integer getStartYear(LocalDate firstAirDate) {
         return firstAirDate.getYear();
     }
 
