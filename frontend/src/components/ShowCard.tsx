@@ -8,7 +8,11 @@ interface Props {
 export default function ShowCard({ show }: Readonly<Props>) {
   return (
     <div className="flex flex-col gap-1">
-      <img src={show.imageUrl} alt={show.title} />
+      <img
+        className="h-25 object-contain"
+        src={show.imageUrl}
+        alt={show.title}
+      />
       <div className="flex items-start justify-between">
         <p className="text-base/5 font-bold text-sky-600">{show.title}</p>
         <ShowStatusLabel status={show.status} />
