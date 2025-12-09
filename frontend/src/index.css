@@ -8,12 +8,12 @@
 
   --main-sidebar-width: 100px;
   --filter-sidebar-width: 340px;
-  --page-content-width: 780px;
-  --full-layout-width: calc(var(--main-sidebar-width) + var(--filter-sidebar-width) + var(--page-content-width));
+  --page-container-width: 780px;
+  --full-layout-width: calc(var(--main-sidebar-width) + var(--filter-sidebar-width) + var(--page-container-width));
 
   --sidebar-x-indent: calc((100% - var(--full-layout-width)) / 2);
   --sidebar-y-indent: calc(var(--headbar-height));
-  --page-content-indent: calc(var(--sidebar-x-indent) + var(--main-sidebar-width));
+  --page-container-indent: calc(var(--sidebar-x-indent) + var(--main-sidebar-width));
   --sidebar-height: calc(100vh - var(--headbar-height));
 
 }
