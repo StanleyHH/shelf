@@ -7,7 +7,7 @@
   --headbar-height: 56px;
 
   --main-sidebar-width: 100px;
-  --filter-sidebar-width: 340px;
+  --filter-sidebar-width: 300px;
   --page-container-width: 780px;
   --full-layout-width: calc(var(--main-sidebar-width) + var(--filter-sidebar-width) + var(--page-container-width));
 
