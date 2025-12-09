@@ -18,13 +18,13 @@ const STATUS_LABELS: Record<string, StatusConfig> = {
   ENDED: { label: 'ENDED', bgColor: 'bg-gray-400', textColor: 'text-white' },
 };
 
-export default function ShowStatusLabel({ status }: Props) {
+export default function ShowStatusLabel({ status }: Readonly<Props>) {
   const config = STATUS_LABELS[status];
 
   return (
     <p
       className={`${config.bgColor} ${config.textColor} rounded-xs border px-0.5
-        text-[8px]`}
+        text-[8px] whitespace-nowrap`}
     >
       {config.label}
     </p>
