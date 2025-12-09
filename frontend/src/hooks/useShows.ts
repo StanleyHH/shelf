@@ -15,6 +15,7 @@ const useShows = () => {
       const next = lastPage.page + 1;
       return next <= lastPage.totalPages ? next : undefined;
     },
+    staleTime: 1000 * 60 * 10, // 10 min
   });
 };
 
