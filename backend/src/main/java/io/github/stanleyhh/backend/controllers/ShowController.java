@@ -23,7 +23,7 @@ public class ShowController {
     @GetMapping
     public PageResponse<ShowListResponseDto> getAllShows(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "20") int size
+            @RequestParam(defaultValue = "24") int size
     ) {
         Page<Show> shows = showService.getAllShows(PageRequest.of(page - 1, size));
         return new PageResponse<>(
