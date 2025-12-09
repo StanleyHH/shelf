@@ -5,7 +5,7 @@ export default function Header() {
         items-center justify-center border-b-3 border-b-red-700 bg-black-90
         text-white"
     >
-      <h1 className="text-xl font-bold">Hello Headbar</h1>
+      <h1 className="text-xl font-bold">Hello Header</h1>
     </header>
   );
 }
