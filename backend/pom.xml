@@ -123,8 +123,8 @@
                 <version>0.8.14</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/config/DataSeeder.class</exclude>
-                        <exclude>**/mappers/*Impl.class</exclude>
+                        <exclude>**/config/DataSeeder.*</exclude>
+                        <exclude>**/mappers/*Impl.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

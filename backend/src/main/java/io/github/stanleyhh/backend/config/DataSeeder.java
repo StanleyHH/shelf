@@ -113,7 +113,7 @@ public class DataSeeder implements CommandLineRunner {
                             LocalDate.of(1975, 1, 1).toEpochDay(),
                             LocalDate.of(2025, 1, 1).toEpochDay() + 1
                     )
-            );
+            ); // NOSONAR: using ThreadLocalRandom for test data seeding, not security-sensitive
 
             Show show = Show.builder()
                     .countries(Set.of(countries.get(0), countries.get(1)))
