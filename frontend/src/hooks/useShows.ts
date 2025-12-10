@@ -1,4 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
+import ms from 'ms';
 
 import type Show from '../entities/Show.ts';
 import ApiClient, { type FetchResponse } from '../services/apiClient.ts';
@@ -15,7 +16,7 @@ const useShows = () => {
       const next = lastPage.page + 1;
       return next <= lastPage.totalPages ? next : undefined;
     },
-    staleTime: 1000 * 60 * 10, // 10 min
+    staleTime: ms('10m'),
   });
 };
 
