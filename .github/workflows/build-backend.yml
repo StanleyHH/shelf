@@ -37,6 +37,3 @@ jobs:
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
           -Dsonar.projectKey=stanleyhh_shelf_backend
           -Dsonar.projectName=stanleyhh_shelf_backend
-        with:
-          args: >
-            -Dsonar.coverage.exclusions=**/config/DataSeeder.*
