@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import ms from 'ms';
 
-import type Genre from '../entities/Genre.ts';
+import type Country from '../entities/Country.ts';
 import ApiClient from '../services/apiClient.ts';
 
-const apiClient = new ApiClient<Genre>('/genres');
+const apiClient = new ApiClient<Country>('/countries');
 
-const useGenres = () =>
+const useCountries = () =>
   useQuery({
-    queryKey: ['genres'],
+    queryKey: ['countries'],
     queryFn: apiClient.getList,
     staleTime: ms('10m'),
   });
 
-export default useGenres;
+export default useCountries;

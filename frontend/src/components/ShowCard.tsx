@@ -1,4 +1,6 @@
 import type Show from '../entities/Show.ts';
+import useCountries from '../hooks/useCountries.ts';
+import useGenres from '../hooks/useGenres.ts';
 import ShowStatusLabel from './ShowStatusLabel.tsx';
 
 interface Props {
@@ -6,6 +8,17 @@ interface Props {
 }
 
 export default function ShowCard({ show }: Readonly<Props>) {
+  const { data: allGenres = [] } = useGenres();
+  const { data: allCountries = [] } = useCountries();
+
+  const genreNames = show.genres
+    .map((genreId) => allGenres.find((g) => g.id === genreId)?.name)
+    .join(', ');
+
+  const countryNames = show.countries
+    .map((countryId) => allCountries.find((c) => c.id === countryId)?.name)
+    .join(', ');
+
   return (
     <div className="flex flex-col gap-1">
       <img
@@ -18,7 +31,7 @@ export default function ShowCard({ show }: Readonly<Props>) {
         <ShowStatusLabel status={show.status} />
       </div>
       <p className="text-sm/4 text-[#999999]">
-        {show.startYear} &#8226; US &#8226; Crime, Drama, Thriller
+        {show.startYear} &#8226; {countryNames} &#8226; {genreNames}
       </p>
     </div>
   );
