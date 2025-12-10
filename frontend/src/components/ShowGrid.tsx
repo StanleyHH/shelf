@@ -22,7 +22,11 @@ export default function ShowGrid() {
     <InfiniteScroll
       next={fetchNextPage}
       hasMore={hasNextPage}
-      loader={<Loader />}
+      loader={
+        <div className="m-40">
+          <Loader />
+        </div>
+      }
       dataLength={fetchedShowsCount}
       className="scrollbar-none"
       aria-label="TV shows list"
