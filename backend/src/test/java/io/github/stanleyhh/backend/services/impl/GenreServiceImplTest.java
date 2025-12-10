@@ -25,7 +25,7 @@ class GenreServiceImplTest {
     GenreServiceImpl genreService;
 
     @Test
-    void getAllGenres() {
+    void getAllGenres_shouldReturnAllGenres() {
         Genre action = Genre.builder().id(UUID.randomUUID()).name("action").build();
         Genre fantasy = Genre.builder().id(UUID.randomUUID()).name("fantasy").build();
         List<Genre> expected = List.of(action, fantasy);
