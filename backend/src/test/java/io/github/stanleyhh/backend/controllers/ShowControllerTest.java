@@ -84,7 +84,7 @@ class ShowControllerTest {
     }
 
     @Test
-    void getAllShows_shouldReturnPagedResponse() throws Exception {
+    void searchShows_shouldReturnPagedResponse() throws Exception {
         mockMvc.perform(get("/api/shows")
                         .param("page", "1")
                         .param("size", "20"))
@@ -101,7 +101,7 @@ class ShowControllerTest {
     }
 
     @Test
-    void getAllShows_shouldRespectPagination() throws Exception {
+    void searchShows_shouldRespectPagination() throws Exception {
         mockMvc.perform(get("/api/shows")
                         .param("page", "1")
                         .param("size", "1"))
