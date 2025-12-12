@@ -11,8 +11,8 @@ interface ShowQuery {
 interface ShowQueryStore {
   showQuery: ShowQuery;
   setSearchText: (searchText: string) => void;
-  setGenreId: (genreId: string) => void;
-  setCountryId: (countryId: string) => void;
+  setGenreName: (genreId: string) => void;
+  setCountryName: (countryId: string) => void;
   setStatus: (status: string) => void;
   setYear: (year: number) => void;
 }
@@ -20,9 +20,9 @@ interface ShowQueryStore {
 const useShowQueryStore = create<ShowQueryStore>((set) => ({
   showQuery: {},
   setSearchText: (searchText) => set(() => ({ showQuery: { searchText } })),
-  setGenreId: (genreName) =>
+  setGenreName: (genreName) =>
     set((store) => ({ showQuery: { ...store.showQuery, genreName } })),
-  setCountryId: (countryName) =>
+  setCountryName: (countryName) =>
     set((store) => ({ showQuery: { ...store.showQuery, countryName } })),
   setStatus: (status) =>
     set((store) => ({ showQuery: { ...store.showQuery, status } })),

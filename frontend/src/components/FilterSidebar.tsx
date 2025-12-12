@@ -1,4 +1,4 @@
-import SearchFilter from './SearchFilter.tsx';
+import SearchFilter from './searchFilter/SearchFilter.tsx';
 
 export default function FilterSidebar() {
   return (
