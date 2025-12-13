@@ -19,7 +19,8 @@ interface ShowQueryStore {
 
 const useShowQueryStore = create<ShowQueryStore>((set) => ({
   showQuery: {},
-  setSearchText: (searchText) => set(() => ({ showQuery: { searchText } })),
+  setSearchText: (searchText) =>
+    set((store) => ({ showQuery: { ...store.showQuery, searchText } })),
   setGenreName: (genreName) =>
     set((store) => ({ showQuery: { ...store.showQuery, genreName } })),
   setCountryName: (countryName) =>
