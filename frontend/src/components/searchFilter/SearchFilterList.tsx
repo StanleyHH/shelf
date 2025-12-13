@@ -6,16 +6,16 @@ interface Props {
   ref?: Ref<HTMLDivElement>;
   viewAllItems: boolean;
   filtered: Genre[];
-  selectedGenreName?: string;
-  setSelectedGenreName: (name: string) => void;
+  selected?: string;
+  onClick: (name: string) => void;
 }
 
 export default function SearchFilterList({
   ref,
   viewAllItems,
   filtered,
-  setSelectedGenreName,
-  selectedGenreName,
+  onClick,
+  selected,
 }: Readonly<Props>) {
   return (
     <div
@@ -31,11 +31,9 @@ export default function SearchFilterList({
             <li key={item.id}>
               <button
                 className={`hover:cursor-pointer hover:underline ${
-                  selectedGenreName === item.name
-                    ? 'text-neutral-400'
-                    : 'text-sky-600'
+                  selected === item.name ? 'text-neutral-400' : 'text-sky-600'
                   }`}
-                onClick={() => setSelectedGenreName(item.name)}
+                onClick={() => onClick(item.name)}
               >
                 {item.name}
               </button>

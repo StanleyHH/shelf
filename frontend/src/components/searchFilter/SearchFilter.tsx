@@ -1,21 +1,28 @@
 import { useRef, useState } from 'react';
 
-import useGenres from '../../hooks/useGenres.ts';
-import useShowQueryStore from '../../store.ts';
+import type Item from '../../entities/Item.ts';
 import SearchFilterList from './SearchFilterList.tsx';
 import SearchFilterToggleButton from './SearchFilterToggleButton.tsx';
 import SearchFilterInput from './SearchFitlerInput.tsx';
 
-export default function SearchFilter() {
-  const { data: items = [] } = useGenres();
+interface Props {
+  filterName: string;
+  items: Item[];
+  selected?: string;
+  onSelect: (value: string) => void;
+}
+
+export default function SearchFilter({
+  filterName,
+  items,
+  selected,
+  onSelect,
+}: Readonly<Props>) {
   const [query, setQuery] = useState('');
   const [viewAllItems, setViewAllItems] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
-
-  const setSelectedGenreName = useShowQueryStore((s) => s.setGenreName);
-  const selectedGenreName = useShowQueryStore((s) => s.showQuery.genreName);
 
   const filtered = items.filter((item) =>
     item.name.toLowerCase().includes(query.toLowerCase()),
@@ -34,18 +41,18 @@ export default function SearchFilter() {
     }, 0);
   }
 
-  function getToggleButtonTitle() {
+  function getToggleButtonLabel() {
     const hide = filtered.length > 5 ? 'Hide' : '';
     return viewAllItems ? hide : 'View All';
   }
 
   return (
     <>
-      <div className="text-lg font-bold">Item</div>
+      <div className="mt-5 text-lg font-bold">{filterName}</div>
       <SearchFilterInput
         viewAllItems={viewAllItems}
         query={query}
-        setQuery={setQuery}
+        onChange={setQuery}
         ref={inputRef}
       />
 
@@ -53,13 +60,13 @@ export default function SearchFilter() {
         ref={listRef}
         viewAllItems={viewAllItems}
         filtered={filtered}
-        selectedGenreName={selectedGenreName}
-        setSelectedGenreName={setSelectedGenreName}
+        selected={selected}
+        onClick={onSelect}
       />
 
       <SearchFilterToggleButton
-        toggleViewAllItems={toggleViewAllItems}
-        getToggleButtonTitle={getToggleButtonTitle}
+        onClick={toggleViewAllItems}
+        label={getToggleButtonLabel()}
       />
     </>
   );

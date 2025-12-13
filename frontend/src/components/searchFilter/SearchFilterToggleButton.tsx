@@ -1,18 +1,18 @@
 interface Props {
-  toggleViewAllItems: () => void;
-  getToggleButtonTitle: () => string;
+  onClick: () => void;
+  label: string;
 }
 
 export default function SearchFilterToggleButton({
-  toggleViewAllItems,
-  getToggleButtonTitle,
+  onClick,
+  label,
 }: Readonly<Props>) {
   return (
     <button
       className="cursor-pointer text-red-500 hover:underline"
-      onClick={toggleViewAllItems}
+      onClick={onClick}
     >
-      {getToggleButtonTitle()}
+      {label}
     </button>
   );
 }
