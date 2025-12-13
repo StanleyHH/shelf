@@ -1,8 +1,8 @@
 package io.github.stanleyhh.backend.domain.specifications;
 
 import io.github.stanleyhh.backend.domain.entities.Show;
-import jakarta.persistence.criteria.Expression;
 import jakarta.validation.constraints.NotBlank;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ShowSpecs {
@@ -34,13 +34,8 @@ public class ShowSpecs {
 
     public static Specification<Show> startedInYear(Integer year) {
         return (root, query, cb) -> {
-            Expression<Integer> yearExpr = cb.function(
-                    "date_part",
-                    Integer.class,
-                    cb.literal("year"),
-                    root.get("firstAirDate")
-            );
-            return cb.equal(yearExpr, year);
+            HibernateCriteriaBuilder hcb = (HibernateCriteriaBuilder) cb;
+            return cb.equal(hcb.year(root.get("firstAirDate")), year);
         };
     }
 }
