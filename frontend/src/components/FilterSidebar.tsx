@@ -4,6 +4,7 @@ import useCountries from '../hooks/useCountries.ts';
 import useGenres from '../hooks/useGenres.ts';
 import useShowQueryStore from '../store.ts';
 import SearchFilter from './searchFilter/SearchFilter.tsx';
+import SearchFilterSelectedItem from './searchFilter/SearchFilterSelectedItem.tsx';
 
 export default function FilterSidebar() {
   const { data: genres = [] } = useGenres();
@@ -27,6 +28,35 @@ export default function FilterSidebar() {
         w-(--filter-sidebar-width) overflow-y-auto border-l-2 border-gray-150
         bg-white p-5"
     >
+      <div className="flex flex-wrap gap-3">
+        {selectedGenreName && (
+          <SearchFilterSelectedItem
+            selected={selectedGenreName}
+            onClick={() => setSelectedGenreName('')}
+          />
+        )}
+        {selectedCountryName && (
+          <SearchFilterSelectedItem
+            selected={selectedCountryName}
+            onClick={() => setSelectedCountryName('')}
+          />
+        )}
+        {selectedYear && (
+          <SearchFilterSelectedItem
+            selected={selectedYear}
+            onClick={() => setSelectedYear('')}
+          />
+        )}
+        {selectedStatus && (
+          <SearchFilterSelectedItem
+            onClick={() => setSelectedStatus('')}
+            selected={
+              STATUSES.find((status) => status.id === selectedStatus)?.name
+            }
+          />
+        )}
+      </div>
+
       <SearchFilter
         filterName="Genre"
         items={genres}
@@ -40,17 +70,16 @@ export default function FilterSidebar() {
         onSelect={setSelectedCountryName}
       />
       <SearchFilter
-        filterName="Current status"
-        items={STATUSES}
-        selected={selectedStatus}
-        onSelect={setSelectedStatus}
-      />
-
-      <SearchFilter
         filterName="Released"
         items={YEARS}
         selected={selectedYear}
         onSelect={setSelectedYear}
+      />
+      <SearchFilter
+        filterName="Current status"
+        items={STATUSES}
+        selected={selectedStatus}
+        onSelect={setSelectedStatus}
       />
     </aside>
   );
