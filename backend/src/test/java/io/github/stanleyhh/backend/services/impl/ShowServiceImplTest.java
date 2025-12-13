@@ -28,12 +28,12 @@ class ShowServiceImplTest {
     private ShowServiceImpl showService;
 
     @Test
-    void getAllShows_shouldReturnPageFromRepository() {
+    void searchShows_shouldReturnPageFromRepository() {
         Pageable pageable = PageRequest.of(0, 20);
         Page<Show> expectedPage = new PageImpl<>(List.of(new Show()));
         when(showRepository.findAll(pageable)).thenReturn(expectedPage);
 
-        Page<Show> result = showService.getAllShows(pageable);
+        Page<Show> result = showService.searchShows(null, pageable);
 
         verify(showRepository).findAll(pageable);
         assertEquals(expectedPage, result);

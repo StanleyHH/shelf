@@ -1,5 +1,6 @@
 package io.github.stanleyhh.backend.controllers;
 
+import io.github.stanleyhh.backend.domain.ShowQueryParams;
 import io.github.stanleyhh.backend.domain.dtos.PageResponse;
 import io.github.stanleyhh.backend.domain.dtos.ShowListResponseDto;
 import io.github.stanleyhh.backend.domain.entities.Show;
@@ -21,11 +22,26 @@ public class ShowController {
     private final ShowMapper showMapper;
 
     @GetMapping
-    public PageResponse<ShowListResponseDto> getAllShows(
+    public PageResponse<ShowListResponseDto> searchShows(
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) String genre,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) Integer year,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "24") int size
     ) {
-        Page<Show> shows = showService.getAllShows(PageRequest.of(page - 1, size));
+        Page<Show> shows = showService.searchShows(
+                ShowQueryParams.builder()
+                        .search(q)
+                        .genreName(genre)
+                        .countryName(country)
+                        .status(status)
+                        .year(year)
+                        .build(),
+                PageRequest.of(page - 1, size)
+        );
+
         return new PageResponse<>(
                 shows.map(showMapper::toShowListResponseDto).getContent(),
                 shows.getNumber() + 1,
