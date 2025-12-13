@@ -158,5 +158,36 @@ class ShowControllerIntegrationTest {
                 .andExpect(jsonPath("$.totalPages").value(0));
     }
 
+    @Test
+    void searchShows_blankGenre_shouldIgnoreFilter() throws Exception {
+        mockMvc.perform(get("/api/shows")
+                        .param("genre", " "))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(3));
 
+    }
+
+    @Test
+    void searchShows_blankSearch_shouldIgnoreFilter() throws Exception {
+        mockMvc.perform(get("/api/shows")
+                        .param("q", " "))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(3));
+    }
+
+    @Test
+    void searchShows_blankCountry_shouldIgnoreFilter() throws Exception {
+        mockMvc.perform(get("/api/shows")
+                        .param("country", " "))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(3));
+    }
+
+    @Test
+    void searchShows_blankStatus_shouldIgnoreFilter() throws Exception {
+        mockMvc.perform(get("/api/shows")
+                        .param("status", " "))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(3));
+    }
 }
