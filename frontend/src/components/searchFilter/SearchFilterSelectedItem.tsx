@@ -13,7 +13,7 @@ export default function SearchFilterSelectedItem({
     <button
       onClick={onClick}
       className="flex cursor-pointer items-center gap-1 rounded-sm bg-black py-1
-        pr-0.5 pl-2 whitespace-nowrap text-white"
+        pr-2 pl-3 whitespace-nowrap text-white"
     >
       {selected}
       <IoCloseSharp className="size-5" />
