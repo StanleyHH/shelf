@@ -1,4 +1,5 @@
 import { STATUSES } from '../entities/Status.ts';
+import { YEARS } from '../entities/Year.ts';
 import useCountries from '../hooks/useCountries.ts';
 import useGenres from '../hooks/useGenres.ts';
 import useShowQueryStore from '../store.ts';
@@ -15,6 +16,9 @@ export default function FilterSidebar() {
 
   const selectedStatus = useShowQueryStore((s) => s.showQuery.status);
   const setSelectedStatus = useShowQueryStore((s) => s.setStatus);
+
+  const selectedYear = useShowQueryStore((s) => s.showQuery.year);
+  const setSelectedYear = useShowQueryStore((s) => s.setYear);
 
   return (
     <aside
@@ -40,6 +44,13 @@ export default function FilterSidebar() {
         items={STATUSES}
         selected={selectedStatus}
         onSelect={setSelectedStatus}
+      />
+
+      <SearchFilter
+        filterName="Released"
+        items={YEARS}
+        selected={selectedYear}
+        onSelect={setSelectedYear}
       />
     </aside>
   );

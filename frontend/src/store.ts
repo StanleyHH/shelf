@@ -5,7 +5,7 @@ interface ShowQuery {
   genreName?: string;
   countryName?: string;
   status?: string;
-  year?: number;
+  year?: string;
 }
 
 interface ShowQueryStore {
@@ -14,7 +14,7 @@ interface ShowQueryStore {
   setGenreName: (genreId: string) => void;
   setCountryName: (countryId: string) => void;
   setStatus: (status: string) => void;
-  setYear: (year: number) => void;
+  setYear: (year: string) => void;
 }
 
 const useShowQueryStore = create<ShowQueryStore>((set) => ({
