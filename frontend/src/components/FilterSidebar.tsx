@@ -1,3 +1,4 @@
+import { STATUSES } from '../entities/Status.ts';
 import useCountries from '../hooks/useCountries.ts';
 import useGenres from '../hooks/useGenres.ts';
 import useShowQueryStore from '../store.ts';
@@ -11,6 +12,9 @@ export default function FilterSidebar() {
   const { data: countries = [] } = useCountries();
   const selectedCountryName = useShowQueryStore((s) => s.showQuery.countryName);
   const setSelectedCountryName = useShowQueryStore((s) => s.setCountryName);
+
+  const selectedStatus = useShowQueryStore((s) => s.showQuery.status);
+  const setSelectedStatus = useShowQueryStore((s) => s.setStatus);
 
   return (
     <aside
@@ -30,6 +34,12 @@ export default function FilterSidebar() {
         items={countries}
         selected={selectedCountryName}
         onSelect={setSelectedCountryName}
+      />
+      <SearchFilter
+        filterName="Current status"
+        items={STATUSES}
+        selected={selectedStatus}
+        onSelect={setSelectedStatus}
       />
     </aside>
   );

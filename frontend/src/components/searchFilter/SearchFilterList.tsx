@@ -1,14 +1,18 @@
 import type { Ref } from 'react';
 
-import type Genre from '../../entities/Genre.ts';
+import type Item from '../../entities/Item.ts';
 
 interface Props {
   ref?: Ref<HTMLDivElement>;
   viewAllItems: boolean;
-  filtered: Genre[];
+  filtered: Item[];
   selected?: string;
   onClick: (name: string) => void;
 }
+
+const getCriteria = (item: Item) => {
+  return item.type === 'status' ? item.id : item.name;
+};
 
 export default function SearchFilterList({
   ref,
@@ -31,9 +35,11 @@ export default function SearchFilterList({
             <li key={item.id}>
               <button
                 className={`hover:cursor-pointer hover:underline ${
-                  selected === item.name ? 'text-neutral-400' : 'text-sky-600'
+                  selected === getCriteria(item)
+                    ? 'text-neutral-400'
+                    : 'text-sky-600'
                   }`}
-                onClick={() => onClick(item.name)}
+                onClick={() => onClick(getCriteria(item))}
               >
                 {item.name}
               </button>

@@ -42,8 +42,8 @@ export default function SearchFilter({
   }
 
   function getToggleButtonLabel() {
-    const hide = filtered.length > 5 ? 'Hide' : '';
-    return viewAllItems ? hide : 'View All';
+    if (filtered.length <= 5) return '';
+    return viewAllItems ? 'Hide' : 'View All';
   }
 
   return (
