@@ -26,36 +26,41 @@ export default function FilterSidebar() {
       className="scrollbar-none fixed top-(--sidebar-y-indent)
         right-(--sidebar-x-indent) h-(--sidebar-height)
         w-(--filter-sidebar-width) overflow-y-auto border-l-2 border-gray-150
-        bg-white p-5"
+        bg-white px-5 pt-1"
     >
-      <div className="flex flex-wrap gap-3">
-        {selectedGenreName && (
-          <SearchFilterSelectedItem
-            selected={selectedGenreName}
-            onClick={() => setSelectedGenreName('')}
-          />
-        )}
-        {selectedCountryName && (
-          <SearchFilterSelectedItem
-            selected={selectedCountryName}
-            onClick={() => setSelectedCountryName('')}
-          />
-        )}
-        {selectedYear && (
-          <SearchFilterSelectedItem
-            selected={selectedYear}
-            onClick={() => setSelectedYear('')}
-          />
-        )}
-        {selectedStatus && (
-          <SearchFilterSelectedItem
-            onClick={() => setSelectedStatus('')}
-            selected={
-              STATUSES.find((status) => status.id === selectedStatus)?.name
-            }
-          />
-        )}
-      </div>
+      {(selectedGenreName ||
+        selectedCountryName ||
+        selectedYear ||
+        selectedStatus) && (
+        <div className="flex flex-wrap gap-3 pt-5">
+          {selectedGenreName && (
+            <SearchFilterSelectedItem
+              selected={selectedGenreName}
+              onClick={() => setSelectedGenreName('')}
+            />
+          )}
+          {selectedCountryName && (
+            <SearchFilterSelectedItem
+              selected={selectedCountryName}
+              onClick={() => setSelectedCountryName('')}
+            />
+          )}
+          {selectedYear && (
+            <SearchFilterSelectedItem
+              selected={selectedYear}
+              onClick={() => setSelectedYear('')}
+            />
+          )}
+          {selectedStatus && (
+            <SearchFilterSelectedItem
+              selected={
+                STATUSES.find((status) => status.id === selectedStatus)?.name
+              }
+              onClick={() => setSelectedStatus('')}
+            />
+          )}
+        </div>
+      )}
 
       <SearchFilter
         filterName="Genre"
