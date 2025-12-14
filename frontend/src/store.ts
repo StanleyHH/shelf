@@ -15,6 +15,7 @@ interface ShowQueryStore {
   setCountryName: (countryId: string) => void;
   setStatus: (status: string) => void;
   setYear: (year: string) => void;
+  reset: () => void;
 }
 
 const useShowQueryStore = create<ShowQueryStore>((set) => ({
@@ -29,6 +30,7 @@ const useShowQueryStore = create<ShowQueryStore>((set) => ({
     set((store) => ({ showQuery: { ...store.showQuery, status } })),
   setYear: (year) =>
     set((store) => ({ showQuery: { ...store.showQuery, year } })),
+  reset: () => set({ showQuery: {} }),
 }));
 
 export default useShowQueryStore;
