@@ -6,7 +6,7 @@ import useShowQueryStore from '../store.ts';
 import SearchFilter from './searchFilter/SearchFilter.tsx';
 import SearchFilterSelectedItem from './searchFilter/SearchFilterSelectedItem.tsx';
 
-export default function FilterSidebar() {
+export default function ShowsFilter() {
   const { data: genres = [] } = useGenres();
   const selectedGenreName = useShowQueryStore((s) => s.showQuery.genreName);
   const setSelectedGenreName = useShowQueryStore((s) => s.setGenreName);
@@ -22,12 +22,7 @@ export default function FilterSidebar() {
   const setSelectedYear = useShowQueryStore((s) => s.setYear);
 
   return (
-    <aside
-      className="scrollbar-none fixed top-(--sidebar-y-indent)
-        right-(--sidebar-x-indent) h-(--sidebar-height)
-        w-(--filter-sidebar-width) overflow-y-auto border-l-2 border-gray-150
-        bg-white px-5 pt-1"
-    >
+    <>
       {(selectedGenreName ||
         selectedCountryName ||
         selectedYear ||
@@ -86,6 +81,6 @@ export default function FilterSidebar() {
         selected={selectedStatus}
         onSelect={setSelectedStatus}
       />
-    </aside>
+    </>
   );
 }
