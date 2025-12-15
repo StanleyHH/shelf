@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(exclude = {"countries", "genres"})
+@EqualsAndHashCode
 public class Show {
 
     @Id
@@ -57,12 +58,17 @@ public class Show {
 
     private String network;
 
+    @OneToMany(mappedBy = "show")
+    @EqualsAndHashCode.Exclude
+    private Set<Season> seasons = new HashSet<>();
+
     @ManyToMany
     @JoinTable(
             name = "show_countries",
             joinColumns = @JoinColumn(name = "show_id"),
             inverseJoinColumns = @JoinColumn(name = "country_id")
     )
+    @EqualsAndHashCode.Exclude
     private Set<Country> countries = new HashSet<>();
 
     @ManyToMany
@@ -71,5 +77,6 @@ public class Show {
             joinColumns = @JoinColumn(name = "show_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
+    @EqualsAndHashCode.Exclude
     private Set<Genre> genres = new HashSet<>();
 }
