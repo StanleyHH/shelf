@@ -1,5 +1,6 @@
 package io.github.stanleyhh.backend.domain.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -79,4 +80,7 @@ public class Show {
     )
     @EqualsAndHashCode.Exclude
     private Set<Genre> genres = new HashSet<>();
+
+    @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserShow> userShows = new HashSet<>();
 }

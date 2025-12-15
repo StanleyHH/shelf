@@ -26,7 +26,6 @@ import java.util.Set;
 @Setter
 @Builder
 @EqualsAndHashCode
-
 public class Country {
 
     @Id
