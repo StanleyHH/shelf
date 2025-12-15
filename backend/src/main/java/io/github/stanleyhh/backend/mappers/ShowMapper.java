@@ -11,7 +11,6 @@ import org.mapstruct.ReportingPolicy;
 
 import java.time.LocalDate;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -28,14 +27,14 @@ public interface ShowMapper {
     }
 
     @Named("getCountriesIds")
-    default Set<UUID> getCountriesIds(Set<Country> countries) {
+    default Set<Long> getCountriesIds(Set<Country> countries) {
         return countries.stream()
                 .map(Country::getId)
                 .collect(Collectors.toSet());
     }
 
     @Named("getGenresIds")
-    default Set<UUID> getGenresIds(Set<Genre> genres) {
+    default Set<Long> getGenresIds(Set<Genre> genres) {
         return genres.stream()
                 .map(Genre::getId)
                 .collect(Collectors.toSet());

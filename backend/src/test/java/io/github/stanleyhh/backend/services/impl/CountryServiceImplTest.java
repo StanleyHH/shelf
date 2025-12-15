@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -27,7 +26,7 @@ class CountryServiceImplTest {
     @Test
     void getAllCountries_shouldReturnAllCountries() {
         Country country = Country.builder()
-                .id(UUID.randomUUID())
+                .id(1L)
                 .name("Germany")
                 .build();
         List<Country> expected = List.of(country);

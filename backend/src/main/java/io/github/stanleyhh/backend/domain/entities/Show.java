@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +22,6 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "shows")
@@ -34,8 +34,9 @@ import java.util.UUID;
 public class Show {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "show_id_seq_gen")
+    @SequenceGenerator(name = "show_id_seq_gen", sequenceName = "show_id_seq", allocationSize = 1)
+    private Long id;
 
     @Column(nullable = false)
     private String title;
@@ -53,6 +54,8 @@ public class Show {
     private LocalDate lastAirDate;
 
     private String imageUrl;
+
+    private String network;
 
     @ManyToMany
     @JoinTable(
