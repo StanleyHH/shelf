@@ -31,6 +31,11 @@ public class UserEpisode {
     @EqualsAndHashCode.Include
     private UserEpisodeId id;
 
+    private Integer rating;
+
+    @Column(name = "watched_date")
+    private LocalDate watchedDate;
+
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id", nullable = false)
@@ -40,9 +45,4 @@ public class UserEpisode {
     @MapsId("episodeId")
     @JoinColumn(name = "episode_id", nullable = false)
     private Episode episode;
-
-    @Column(name = "watched_date")
-    private LocalDate watchedDate;
-
-    private Integer rating;
 }

@@ -36,17 +36,15 @@ public class Season {
     @SequenceGenerator(name = "season_id_seq_gen", sequenceName = "season_id_seq", allocationSize = 1)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "show_id", nullable = false)
-    @EqualsAndHashCode.Exclude
-    private Show show;
+    @Column(nullable = false)
+    private Long number;
 
     @OneToMany(mappedBy = "season")
     @EqualsAndHashCode.Exclude
     private Set<Episode> episodes = new HashSet<>();
 
-    @Column(nullable = false)
-    private Long number;
-
-
+    @ManyToOne
+    @JoinColumn(name = "show_id", nullable = false)
+    @EqualsAndHashCode.Exclude
+    private Show show;
 }

@@ -1,7 +1,6 @@
 package io.github.stanleyhh.backend.domain.entities;
 
-
-import io.github.stanleyhh.backend.domain.UserShowId;
+import io.github.stanleyhh.backend.domain.ShowActorId;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -17,31 +16,29 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "user_shows")
-@NoArgsConstructor
+@Table(name = "show_actors")
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter
 @Setter
-@Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class UserShow {
+public class ShowActor {
 
     @EmbeddedId
     @EqualsAndHashCode.Include
-    private UserShowId id;
-
-    private Integer rating;
+    private ShowActorId id;
 
     @Column(nullable = false)
-    private UserShowStatus status;
-
-    @ManyToOne
-    @MapsId("userId")
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private String role;
 
     @ManyToOne
     @MapsId("showId")
-    @JoinColumn(name = "show_id", nullable = false)
+    @JoinColumn(name = "show_id")
     private Show show;
+
+    @ManyToOne
+    @MapsId("actorId")
+    @JoinColumn(name = "actor_id")
+    private Actor actor;
 }
