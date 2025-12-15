@@ -1,4 +1,4 @@
-package io.github.stanleyhh.backend.domain;
+package io.github.stanleyhh.backend.domain.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,6 +1,6 @@
 package io.github.stanleyhh.backend.services.impl;
 
-import io.github.stanleyhh.backend.domain.ShowQueryParams;
+import io.github.stanleyhh.backend.domain.dtos.ShowQueryParams;
 import io.github.stanleyhh.backend.domain.entities.Show;
 import io.github.stanleyhh.backend.domain.specifications.ShowSpecs;
 import io.github.stanleyhh.backend.repositories.ShowRepository;

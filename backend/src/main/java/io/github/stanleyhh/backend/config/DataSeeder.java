@@ -3,7 +3,7 @@ package io.github.stanleyhh.backend.config;
 import io.github.stanleyhh.backend.domain.entities.Country;
 import io.github.stanleyhh.backend.domain.entities.Genre;
 import io.github.stanleyhh.backend.domain.entities.Show;
-import io.github.stanleyhh.backend.domain.entities.ShowStatus;
+import io.github.stanleyhh.backend.domain.enums.ShowStatus;
 import io.github.stanleyhh.backend.repositories.CountryRepository;
 import io.github.stanleyhh.backend.repositories.GenreRepository;
 import io.github.stanleyhh.backend.repositories.ShowRepository;

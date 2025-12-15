@@ -1,4 +1,4 @@
-package io.github.stanleyhh.backend.domain;
+package io.github.stanleyhh.backend.domain.entities.embeddable;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

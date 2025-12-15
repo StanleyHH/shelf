@@ -1,7 +1,8 @@
 package io.github.stanleyhh.backend.domain.entities;
 
 
-import io.github.stanleyhh.backend.domain.UserShowId;
+import io.github.stanleyhh.backend.domain.entities.embeddable.UserShowId;
+import io.github.stanleyhh.backend.domain.enums.UserShowStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;

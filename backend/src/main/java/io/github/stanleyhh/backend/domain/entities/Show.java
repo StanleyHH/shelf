@@ -1,5 +1,6 @@
 package io.github.stanleyhh.backend.domain.entities;
 
+import io.github.stanleyhh.backend.domain.enums.ShowStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

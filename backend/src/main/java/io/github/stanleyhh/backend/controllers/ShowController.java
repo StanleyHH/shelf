@@ -1,6 +1,6 @@
 package io.github.stanleyhh.backend.controllers;
 
-import io.github.stanleyhh.backend.domain.ShowQueryParams;
+import io.github.stanleyhh.backend.domain.dtos.ShowQueryParams;
 import io.github.stanleyhh.backend.domain.dtos.PageResponse;
 import io.github.stanleyhh.backend.domain.dtos.ShowListResponseDto;
 import io.github.stanleyhh.backend.domain.entities.Show;

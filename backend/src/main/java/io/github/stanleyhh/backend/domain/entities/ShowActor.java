@@ -1,6 +1,6 @@
 package io.github.stanleyhh.backend.domain.entities;
 
-import io.github.stanleyhh.backend.domain.ShowActorId;
+import io.github.stanleyhh.backend.domain.entities.embeddable.ShowActorId;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
