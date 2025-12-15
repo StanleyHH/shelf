@@ -81,6 +81,15 @@ public class Show {
     @EqualsAndHashCode.Exclude
     private Set<Genre> genres = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "show_actors",
+            joinColumns = @JoinColumn(name = "show_id"),
+            inverseJoinColumns = @JoinColumn(name = "actor_id")
+    )
+    @EqualsAndHashCode.Exclude
+    private Set<Actor> actors = new HashSet<>();
+
     @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserShow> userShows = new HashSet<>();
 }
