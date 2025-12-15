@@ -25,7 +25,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(exclude = {"shows"})
+@EqualsAndHashCode
 
 public class Country {
 
@@ -39,5 +39,6 @@ public class Country {
     private String name;
 
     @ManyToMany(mappedBy = "countries")
+    @EqualsAndHashCode.Exclude
     private Set<Show> shows = new HashSet<>();
 }

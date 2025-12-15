@@ -25,7 +25,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(exclude = {"shows"})
+@EqualsAndHashCode
 public class Genre {
 
     @Id
@@ -38,5 +38,6 @@ public class Genre {
     private String name;
 
     @ManyToMany(mappedBy = "genres")
+    @EqualsAndHashCode.Exclude
     private Set<Show> shows = new HashSet<>();
 }
