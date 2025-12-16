@@ -8,7 +8,8 @@ export default function MainPage() {
   return (
     <main
       className="mt-(--headbar-height) ml-(--content-container-indent)
-        min-h-(--sidebar-height) w-(--content-container-width) bg-white p-5"
+        min-h-(--sidebar-height) w-(--content-container-width) bg-white p-5
+        pb-100"
     >
       {error ? <ErrorPage /> : <Outlet />}
     </main>

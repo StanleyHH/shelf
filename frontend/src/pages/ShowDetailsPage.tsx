@@ -4,6 +4,7 @@ import yourAd from '../assets/your_ad.jpg';
 import ActorCard from '../components/ActorCard.tsx';
 import Breadcrumb from '../components/Breadcrumb.tsx';
 import Counter from '../components/Counter.tsx';
+import EpisodesBySeason from '../components/EpisodesBySeason.tsx';
 import FilterLink from '../components/FilterLink.tsx';
 import SecondSidebarContainer from '../components/SecondSidebarContainer.tsx';
 import ShowStatusBar from '../components/ShowStatusBar.tsx';
@@ -137,6 +138,9 @@ export default function ShowDetailsPage() {
       </div>
 
       <div className="mt-15 text-xl font-bold">Episode Guide</div>
+
+      <EpisodesBySeason isChecked={false} />
+      <EpisodesBySeason isChecked={false} />
 
       <SecondSidebarContainer>
         <img src={yourAd} alt="your_ad" />
