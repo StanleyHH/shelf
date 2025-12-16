@@ -8,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -16,7 +17,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "show_actors")
+@Table(
+        name = "show_actors",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"show_id", "actor_id"})
+)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -26,8 +30,9 @@ import lombok.Setter;
 public class ShowActor {
 
     @EmbeddedId
+    @Builder.Default
     @EqualsAndHashCode.Include
-    private ShowActorId id;
+    private ShowActorId id = new ShowActorId();
 
     @Column(nullable = false)
     private String role;
