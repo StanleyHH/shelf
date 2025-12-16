@@ -60,6 +60,9 @@ public class Show {
 
     private String network;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
     @OneToMany(mappedBy = "show")
     @EqualsAndHashCode.Exclude
     private Set<Season> seasons = new HashSet<>();

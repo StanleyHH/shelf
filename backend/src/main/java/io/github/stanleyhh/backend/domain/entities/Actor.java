@@ -42,6 +42,7 @@ public class Actor {
 
     private LocalDate birthDate;
 
+    @Column(columnDefinition = "TEXT")
     private String biography;
 
     private String image;
