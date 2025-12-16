@@ -1,11 +1,15 @@
 package io.github.stanleyhh.backend.config;
 
+import io.github.stanleyhh.backend.domain.entities.Actor;
 import io.github.stanleyhh.backend.domain.entities.Country;
 import io.github.stanleyhh.backend.domain.entities.Genre;
 import io.github.stanleyhh.backend.domain.entities.Show;
+import io.github.stanleyhh.backend.domain.entities.ShowActor;
 import io.github.stanleyhh.backend.domain.enums.ShowStatus;
+import io.github.stanleyhh.backend.repositories.ActorRepository;
 import io.github.stanleyhh.backend.repositories.CountryRepository;
 import io.github.stanleyhh.backend.repositories.GenreRepository;
+import io.github.stanleyhh.backend.repositories.ShowActorRepository;
 import io.github.stanleyhh.backend.repositories.ShowRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 @Profile("!test")
@@ -35,17 +38,25 @@ public class DataSeeder implements CommandLineRunner {
     private final ShowRepository showRepository;
     private final CountryRepository countryRepository;
     private final GenreRepository genreRepository;
+    private final ActorRepository actorRepository;
+    private final ShowActorRepository showActorRepository;
 
     private final Faker faker = new Faker();
 
     private final List<Genre> genres = new ArrayList<>();
     private final List<Country> countries = new ArrayList<>();
+    private final List<Actor> actors = new ArrayList<>();
+    private final List<Show> shows = new ArrayList<>();
+
+    private static final Integer SHOWS_QUANTITY = 50;
 
     @Override
     public void run(String... args) {
+        seedActors();
         seedGenres();
         seedCountries();
-        seedShows(50);
+        seedShows();
+        seedShowActors();
     }
 
     private void seedGenres() {
@@ -83,7 +94,32 @@ public class DataSeeder implements CommandLineRunner {
         }
     }
 
-    private void seedShows(int quantity) {
+    private void seedActors() {
+        if (actorRepository.existsBy()) {
+            log.info("The actors table has already been seeded");
+            return;
+        }
+
+        try {
+            List<String> actorImages = Files.readAllLines(Paths.get(new ClassPathResource("seed/actor_images.txt").getURI()));
+            actorImages.forEach(image -> {
+                Actor actor = actorRepository.save(Actor.builder()
+                        .image(image)
+                        .name(faker.name().fullName())
+                        .biography(faker.lorem().paragraph(10))
+                        .gender(faker.gender().binaryTypes())
+                        .birthDate(faker.timeAndDate().birthday())
+                        .build());
+                actors.add(actor);
+            });
+            log.info("The actors table has been seeded successfully");
+
+        } catch (IOException e) {
+            log.warn("Can't get actor images from the file");
+        }
+    }
+
+    private void seedShows() {
         if (showRepository.existsBy()) {
             log.info("The shows table has already been seeded");
             return;
@@ -92,13 +128,13 @@ public class DataSeeder implements CommandLineRunner {
         List<String> images;
 
         try {
-            images = Files.readAllLines(Paths.get(new ClassPathResource("seed/images.txt").getURI()));
+            images = Files.readAllLines(Paths.get(new ClassPathResource("seed/show_images.txt").getURI()));
         } catch (IOException e) {
             log.warn("Can't get images from the file");
             return;
         }
 
-        for (int i = 0; i < quantity; i++) {
+        for (int i = 0; i < SHOWS_QUANTITY; i++) {
             Collections.shuffle(genres);
             Collections.shuffle(countries);
             Collections.shuffle(images);
@@ -108,26 +144,43 @@ public class DataSeeder implements CommandLineRunner {
 
             String title = faker.movie().name();
 
-            LocalDate randomDate = LocalDate.ofEpochDay(
-                    ThreadLocalRandom.current().nextLong(
-                            LocalDate.of(1975, 1, 1).toEpochDay(),
-                            LocalDate.of(2025, 1, 1).toEpochDay() + 1
-                    )
-            ); // NOSONAR: using ThreadLocalRandom for test data seeding, not security-sensitive
-
             Show show = Show.builder()
                     .countries(Set.of(countries.get(0), countries.get(1)))
                     .genres(Set.of(genres.get(0), genres.get(1)))
                     .title(title)
                     .originalTitle(title)
                     .status(statuses.getFirst())
-                    .firstAirDate(randomDate)
+                    .firstAirDate(faker.timeAndDate().birthday())
                     .lastAirDate(LocalDate.now())
                     .imageUrl(images.getFirst())
+                    .network(faker.animal().name())
+                    .description(faker.lorem().paragraph(10))
                     .build();
 
-            showRepository.save(show);
+            Show savedShow = showRepository.save(show);
+            shows.add(savedShow);
         }
         log.info("The shows table has been seeded successfully");
+    }
+
+    private void seedShowActors() {
+        if (showActorRepository.existsBy()) {
+            log.info("The show_actors table has already been seeded");
+            return;
+        }
+        for (Show show : shows) {
+            Collections.shuffle(actors);
+            for (int j = 0; j < faker.random().nextInt(4, 10); j++) {
+                Actor actor = actors.get(j);
+                ShowActor showActor = ShowActor
+                        .builder()
+                        .show(show)
+                        .actor(actor)
+                        .role(faker.backToTheFuture().character())
+                        .build();
+                showActorRepository.save(showActor);
+            }
+        }
+        log.info("The show_actors table has been seeded successfully");
     }
 }
