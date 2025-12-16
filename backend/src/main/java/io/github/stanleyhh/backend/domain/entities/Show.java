@@ -63,7 +63,7 @@ public class Show {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy = "show")
+    @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     private Set<Season> seasons = new HashSet<>();
 

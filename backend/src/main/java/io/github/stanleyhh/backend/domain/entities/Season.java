@@ -1,5 +1,6 @@
 package io.github.stanleyhh.backend.domain.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,11 +40,11 @@ public class Season {
     @Column(nullable = false)
     private Long number;
 
-    @OneToMany(mappedBy = "season")
+    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL, orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     private Set<Episode> episodes = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "show_id", nullable = false)
     @EqualsAndHashCode.Exclude
     private Show show;

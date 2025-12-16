@@ -44,7 +44,7 @@ public class Episode {
     @EqualsAndHashCode.Exclude
     private Set<UserEpisode> userEpisodes = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "season_id", nullable = false)
     @EqualsAndHashCode.Exclude
     private Season season;
