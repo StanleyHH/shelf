@@ -3,12 +3,14 @@ package io.github.stanleyhh.backend.config;
 import io.github.stanleyhh.backend.domain.entities.Actor;
 import io.github.stanleyhh.backend.domain.entities.Country;
 import io.github.stanleyhh.backend.domain.entities.Genre;
+import io.github.stanleyhh.backend.domain.entities.Season;
 import io.github.stanleyhh.backend.domain.entities.Show;
 import io.github.stanleyhh.backend.domain.entities.ShowActor;
 import io.github.stanleyhh.backend.domain.enums.ShowStatus;
 import io.github.stanleyhh.backend.repositories.ActorRepository;
 import io.github.stanleyhh.backend.repositories.CountryRepository;
 import io.github.stanleyhh.backend.repositories.GenreRepository;
+import io.github.stanleyhh.backend.repositories.SeasonRepository;
 import io.github.stanleyhh.backend.repositories.ShowActorRepository;
 import io.github.stanleyhh.backend.repositories.ShowRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +42,7 @@ public class DataSeeder implements CommandLineRunner {
     private final GenreRepository genreRepository;
     private final ActorRepository actorRepository;
     private final ShowActorRepository showActorRepository;
+    private final SeasonRepository seasonRepository;
 
     private final Faker faker = new Faker();
 
@@ -57,6 +60,7 @@ public class DataSeeder implements CommandLineRunner {
         seedCountries();
         seedShows();
         seedShowActors();
+        seedSeasons();
     }
 
     private void seedGenres() {
@@ -168,6 +172,11 @@ public class DataSeeder implements CommandLineRunner {
             log.info("The show_actors table has already been seeded");
             return;
         }
+
+        if (shows.isEmpty()) {
+            shows.addAll(showRepository.findAll());
+        }
+
         for (Show show : shows) {
             Collections.shuffle(actors);
             for (int j = 0; j < faker.random().nextInt(4, 10); j++) {
@@ -182,5 +191,24 @@ public class DataSeeder implements CommandLineRunner {
             }
         }
         log.info("The show_actors table has been seeded successfully");
+    }
+
+    private void seedSeasons() {
+        if (seasonRepository.existsBy()) {
+            log.info("The seasons table has already been seeded");
+            return;
+        }
+
+        if (shows.isEmpty()) {
+            shows.addAll(showRepository.findAll());
+        }
+
+        for (Show show : shows) {
+            for (long i = 1; i <= faker.random().nextLong(2, 6); i++) {
+                Season season = Season.builder().number(i).show(show).build();
+                seasonRepository.save(season);
+            }
+        }
+        log.info("The seasons table has been seeded successfully");
     }
 }
