@@ -8,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -18,7 +19,10 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "user_episodes")
+@Table(
+        name = "user_episodes",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "episode_id"})
+)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -28,8 +32,9 @@ import java.time.LocalDate;
 public class UserEpisode {
 
     @EmbeddedId
+    @Builder.Default
     @EqualsAndHashCode.Include
-    private UserEpisodeId id;
+    private UserEpisodeId id = new UserEpisodeId();
 
     private Integer rating;
 

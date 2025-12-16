@@ -6,10 +6,13 @@ import io.github.stanleyhh.backend.domain.enums.UserShowStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -18,7 +21,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "user_shows")
+@Table(
+        name = "user_shows",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "show_id"})
+)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -28,12 +34,14 @@ import lombok.Setter;
 public class UserShow {
 
     @EmbeddedId
+    @Builder.Default
     @EqualsAndHashCode.Include
-    private UserShowId id;
+    private UserShowId id = new UserShowId();
 
     private Integer rating;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserShowStatus status;
 
     @ManyToOne
