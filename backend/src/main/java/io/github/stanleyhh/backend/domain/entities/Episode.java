@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,6 +40,17 @@ public class Episode {
 
     @Column(nullable = false)
     private Long number;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private LocalDate releaseDate;
+
+    @Column(nullable = false)
+    private Integer runtime;
+
+    private String image;
 
     @OneToMany(mappedBy = "episode", cascade = CascadeType.ALL, orphanRemoval = true)
     @EqualsAndHashCode.Exclude

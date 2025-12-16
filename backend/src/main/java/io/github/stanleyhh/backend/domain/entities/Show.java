@@ -60,6 +60,8 @@ public class Show {
 
     private String network;
 
+    private float imdbRating;
+
     @Column(columnDefinition = "TEXT")
     private String description;
 
