@@ -4,8 +4,6 @@ import io.github.stanleyhh.backend.domain.entities.Show;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import java.util.UUID;
-
-public interface ShowRepository extends JpaRepository<Show, UUID>, JpaSpecificationExecutor<Show> {
+public interface ShowRepository extends JpaRepository<Show, Long>, JpaSpecificationExecutor<Show> {
     boolean existsBy();
 }

@@ -5,11 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class GenreDto {
+public class SeasonDto {
     private Long id;
-    private String name;
+    private Long number;
+    private List<EpisodeDto> episodes;
 }
