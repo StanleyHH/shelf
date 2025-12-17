@@ -25,11 +25,13 @@ import io.github.stanleyhh.backend.repositories.ShowRepository;
 import io.github.stanleyhh.backend.repositories.UserRepository;
 import io.github.stanleyhh.backend.repositories.UserShowRepository;
 import io.github.stanleyhh.backend.services.ShowService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.IntSummaryStatistics;
 import java.util.List;
@@ -81,9 +83,11 @@ public class ShowServiceImpl implements ShowService {
         return showRepository.findAll(spec, pageable);
     }
 
+    @Transactional
     @Override
     public ShowDetailsResponseDto getShowDetails(Long id) {
-        Show show = showRepository.findById(id).orElseThrow(RuntimeException::new);
+        Show show = showRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Show not found with id: " + id));
         ShowDetailsResponseDto responseDto = showMapper.toBaseDetailsDto(show);
 
         List<Season> seasons = seasonRepository.findAllByShowOrderByNumberDesc(show);
