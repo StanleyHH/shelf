@@ -5,7 +5,7 @@ import type Show from '../entities/Show.ts';
 import ApiClient, { type FetchResponse } from '../services/apiClient.ts';
 import useShowQueryStore from '../store.ts';
 
-const apiClient = new ApiClient<Show>('/shows');
+const apiClient = new ApiClient('/shows');
 
 const useShows = () => {
   const showQuery = useShowQueryStore((s) => s.showQuery);
@@ -14,7 +14,7 @@ const useShows = () => {
     queryKey: ['shows', showQuery],
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
-      apiClient.getAll({
+      apiClient.getAll<Show>({
         params: {
           q: showQuery.searchText,
           genre: showQuery.genreName,

@@ -12,19 +12,19 @@ const axiosInstance = axios.create({
   baseURL: '/api',
 });
 
-class ApiClient<T> {
+class ApiClient {
   endpoint: string;
 
   constructor(endpoint: string) {
     this.endpoint = endpoint;
   }
 
-  getAll = async (config: AxiosRequestConfig) =>
+  getAll = async <T>(config: AxiosRequestConfig) =>
     axiosInstance
       .get<FetchResponse<T>>(this.endpoint, config)
       .then((res) => res.data);
 
-  getList = async (config: AxiosRequestConfig) =>
+  getList = async <T>(config: AxiosRequestConfig) =>
     axiosInstance.get<T[]>(this.endpoint, config).then((res) => res.data);
 }
 
