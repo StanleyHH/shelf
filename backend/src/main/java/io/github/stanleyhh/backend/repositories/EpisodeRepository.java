@@ -12,5 +12,5 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long> {
 
     List<Episode> findAllBySeasonId(Long id);
 
-    List<Episode> findAllBySeasonOrderByNumber(Season season);
+    List<Episode> findAllBySeasonOrderByNumberDesc(Season season);
 }

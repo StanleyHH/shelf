@@ -12,5 +12,5 @@ public interface SeasonRepository extends JpaRepository<Season, Long> {
 
     List<Season> findAllByShowId(Long id);
 
-    List<Season> findAllByShowOrderByNumber(Show show);
+    List<Season> findAllByShowOrderByNumberDesc(Show show);
 }

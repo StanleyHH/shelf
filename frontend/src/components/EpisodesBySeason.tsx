@@ -2,15 +2,20 @@ import { useState } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { Link } from 'react-router';
 
+import type { Season } from '../hooks/useShowDetails.ts';
 import Counter from './Counter.tsx';
 import EpisodeRow from './EpisodeRow.tsx';
 import EpisodeWatchLabel from './EpisodeWatchLabel.tsx';
 
 interface Props {
   isChecked: boolean;
+  season: Season;
 }
 
-export default function EpisodesBySeason({ isChecked }: Readonly<Props>) {
+export default function EpisodesBySeason({
+  isChecked,
+  season,
+}: Readonly<Props>) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -27,7 +32,8 @@ export default function EpisodesBySeason({ isChecked }: Readonly<Props>) {
             hover:underline"
           onClick={(e) => e.stopPropagation()}
         >
-          Season 1<Counter value="8" />
+          Season {season.number}
+          <Counter value={season.episodes.length} />
         </Link>
         <div className="flex items-center gap-5">
           {open ? (
@@ -47,11 +53,13 @@ export default function EpisodesBySeason({ isChecked }: Readonly<Props>) {
       >
         <div className="overflow-hidden">
           <ul className="[&>:nth-child(even)]:bg-neutral-100">
-            <EpisodeRow isChecked={false} />
-            <EpisodeRow isChecked={true} />
-            <EpisodeRow isChecked={true} />
-            <EpisodeRow isChecked={true} />
-            <EpisodeRow isChecked={true} />
+            {season.episodes.map((episode) => (
+              <EpisodeRow
+                episode={episode}
+                isChecked={false}
+                key={episode.id}
+              />
+            ))}
           </ul>
         </div>
       </div>

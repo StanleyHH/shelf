@@ -1,5 +1,5 @@
 interface Props {
-  value: string;
+  value: string | number;
 }
 
 export default function Counter({ value }: Readonly<Props>) {

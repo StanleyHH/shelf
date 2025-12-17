@@ -79,10 +79,10 @@ public class ShowServiceImpl implements ShowService {
         Show show = showRepository.findById(id).orElseThrow(RuntimeException::new);
         ShowDetailsResponseDto responseDto = showMapper.toBaseDetailsDto(show);
 
-        List<Season> seasons = seasonRepository.findAllByShowOrderByNumber(show);
+        List<Season> seasons = seasonRepository.findAllByShowOrderByNumberDesc(show);
         List<SeasonDto> seasonDtos = seasons.stream().map(season -> {
             SeasonDto seasonDto = seasonMapper.toDto(season);
-            List<Episode> episodes = episodeRepository.findAllBySeasonOrderByNumber(season);
+            List<Episode> episodes = episodeRepository.findAllBySeasonOrderByNumberDesc(season);
             List<EpisodeDto> episodeDtos = episodes.stream().map(episodeMapper::toDto).toList();
             seasonDto.setEpisodes(episodeDtos);
             return seasonDto;

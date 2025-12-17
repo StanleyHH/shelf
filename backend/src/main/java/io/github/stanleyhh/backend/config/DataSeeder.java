@@ -356,8 +356,8 @@ public class DataSeeder implements CommandLineRunner {
                         .build();
                 userEpisodeRepository.save(userEpisode);
             }
-            log.info("The user_episodes table has been seeded successfully");
         }
+        log.info("The user_episodes table has been seeded successfully");
     }
 
     private void getShowImages() {
