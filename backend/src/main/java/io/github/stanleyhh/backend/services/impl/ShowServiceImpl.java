@@ -106,7 +106,7 @@ public class ShowServiceImpl implements ShowService {
         List<GenreDto> genreDtos = show.getGenres().stream().map(genreMapper::toDto).toList();
         responseDto.setGenres(genreDtos);
 
-        List<ActorRoleDto> showActors = show.getShowActors().stream().map(showActorMapper::toDto).toList();
+        List<ActorRoleDto> showActors = show.getShowActors().stream().map(showActorMapper::toActorRoleDto).toList();
         responseDto.setActors(showActors);
 
         List<UserShow> userShows = userShowRepository.findAllByShow(show);
