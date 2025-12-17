@@ -3,6 +3,7 @@ import humanizeDuration from 'humanize-duration';
 import { useParams } from 'react-router';
 
 import yourAd from '../assets/your_ad.jpg';
+import { ActorsGrid } from '../components/ActorsGrid.tsx';
 import Breadcrumb from '../components/Breadcrumb.tsx';
 import Counter from '../components/Counter.tsx';
 import EpisodesBySeason from '../components/EpisodesBySeason.tsx';
@@ -12,7 +13,6 @@ import ShowStatusBar from '../components/ShowStatusBar.tsx';
 import ShowStatusLabel from '../components/ShowStatusLabel.tsx';
 import useShowDetails, { type ShowDetails } from '../hooks/useShowDetails.ts';
 import useShowQueryStore from '../store.ts';
-import { ActorsGrid } from '../components/ActorsGrid.tsx';
 
 const ratingStyle = {
   itemShapes: ThinStar,
@@ -52,7 +52,13 @@ export default function ShowDetailsPage() {
 
   return (
     <>
-      <Breadcrumb currentPage="showDetails" />
+      <Breadcrumb
+        navLinks={[
+          { label: 'Home', to: '/' },
+          { label: 'Shows', to: '/shows' },
+          { label: show.title },
+        ]}
+      />
 
       <div className="flex items-center gap-1">
         <p className="mt-2 text-3xl">{show.title}</p>
@@ -153,9 +159,7 @@ export default function ShowDetailsPage() {
         </div>
       </div>
 
-      <div className="relative mt-5 text-xl font-bold">
-        Overview
-      </div>
+      <div className="relative mt-5 text-xl font-bold">Overview</div>
       <div className="mt-3 leading-5">{show.description}</div>
 
       <div className="relative mt-6 text-xl font-bold">
