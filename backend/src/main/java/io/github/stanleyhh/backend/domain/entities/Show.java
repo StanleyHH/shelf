@@ -78,6 +78,7 @@ public class Show {
             inverseJoinColumns = @JoinColumn(name = "country_id")
     )
     @EqualsAndHashCode.Exclude
+    @Builder.Default
     private Set<Country> countries = new HashSet<>();
 
     @ManyToMany
@@ -87,13 +88,16 @@ public class Show {
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
     @EqualsAndHashCode.Exclude
+    @Builder.Default
     private Set<Genre> genres = new HashSet<>();
 
     @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
     @EqualsAndHashCode.Exclude
+    @Builder.Default
     private Set<UserShow> userShows = new HashSet<>();
 
     @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
     @EqualsAndHashCode.Exclude
+    @Builder.Default
     private Set<ShowActor> showActors = new HashSet<>();
 }
