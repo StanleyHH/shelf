@@ -3,7 +3,6 @@ import humanizeDuration from 'humanize-duration';
 import { useParams } from 'react-router';
 
 import yourAd from '../assets/your_ad.jpg';
-import ActorCard from '../components/ActorCard.tsx';
 import Breadcrumb from '../components/Breadcrumb.tsx';
 import Counter from '../components/Counter.tsx';
 import EpisodesBySeason from '../components/EpisodesBySeason.tsx';
@@ -13,6 +12,7 @@ import ShowStatusBar from '../components/ShowStatusBar.tsx';
 import ShowStatusLabel from '../components/ShowStatusLabel.tsx';
 import useShowDetails, { type ShowDetails } from '../hooks/useShowDetails.ts';
 import useShowQueryStore from '../store.ts';
+import { ActorsGrid } from '../components/ActorsGrid.tsx';
 
 const ratingStyle = {
   itemShapes: ThinStar,
@@ -154,20 +154,16 @@ export default function ShowDetailsPage() {
       </div>
 
       <div className="relative mt-5 text-xl font-bold">
+        Overview
+      </div>
+      <div className="mt-3 leading-5">{show.description}</div>
+
+      <div className="relative mt-6 text-xl font-bold">
         Cast
         <Counter value={show.actors.length.toString()} />
       </div>
 
-      <div className="mt-3 grid grid-cols-2 gap-y-5">
-        {show.actors.map((actor) => (
-          <ActorCard
-            name={actor.name}
-            role={actor.role}
-            image={actor.image}
-            key={actor.id}
-          />
-        ))}
-      </div>
+      <ActorsGrid actors={show.actors} />
 
       <div className="mt-15 text-xl font-bold">Episode Guide</div>
       {show.seasons.map((season) => (

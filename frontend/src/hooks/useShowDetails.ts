@@ -18,7 +18,7 @@ export interface Episode {
   releaseDate: string;
 }
 
-interface Actor {
+export interface Actor {
   id: number;
   name: string;
   image: string;
