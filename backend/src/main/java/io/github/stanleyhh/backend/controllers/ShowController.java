@@ -1,15 +1,18 @@
 package io.github.stanleyhh.backend.controllers;
 
-import io.github.stanleyhh.backend.domain.ShowQueryParams;
 import io.github.stanleyhh.backend.domain.dtos.PageResponse;
+import io.github.stanleyhh.backend.domain.dtos.ShowDetailsResponseDto;
 import io.github.stanleyhh.backend.domain.dtos.ShowListResponseDto;
+import io.github.stanleyhh.backend.domain.dtos.ShowQueryParams;
 import io.github.stanleyhh.backend.domain.entities.Show;
 import io.github.stanleyhh.backend.mappers.ShowMapper;
 import io.github.stanleyhh.backend.services.ShowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,5 +52,10 @@ public class ShowController {
                 shows.getTotalElements(),
                 shows.getTotalPages()
         );
+    }
+
+    @GetMapping(path = "/{show_id}")
+    ResponseEntity<ShowDetailsResponseDto> getShowDetails(@PathVariable("show_id") Long showId) {
+        return ResponseEntity.ok(showService.getShowDetails(showId));
     }
 }

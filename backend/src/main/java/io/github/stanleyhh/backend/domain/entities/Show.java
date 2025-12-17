@@ -1,5 +1,7 @@
 package io.github.stanleyhh.backend.domain.entities;
 
+import io.github.stanleyhh.backend.domain.enums.ShowStatus;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +25,6 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "shows")
@@ -30,12 +33,13 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(exclude = {"countries", "genres"})
+@EqualsAndHashCode
 public class Show {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "show_id_seq_gen")
+    @SequenceGenerator(name = "show_id_seq_gen", sequenceName = "show_id_seq", allocationSize = 1)
+    private Long id;
 
     @Column(nullable = false)
     private String title;
@@ -54,12 +58,27 @@ public class Show {
 
     private String imageUrl;
 
+    private String network;
+
+    private float imdbRating;
+
+    private int imdbVotesCount;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
+    @EqualsAndHashCode.Exclude
+    private Set<Season> seasons = new HashSet<>();
+
     @ManyToMany
     @JoinTable(
             name = "show_countries",
             joinColumns = @JoinColumn(name = "show_id"),
             inverseJoinColumns = @JoinColumn(name = "country_id")
     )
+    @EqualsAndHashCode.Exclude
+    @Builder.Default
     private Set<Country> countries = new HashSet<>();
 
     @ManyToMany
@@ -68,5 +87,17 @@ public class Show {
             joinColumns = @JoinColumn(name = "show_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
+    @EqualsAndHashCode.Exclude
+    @Builder.Default
     private Set<Genre> genres = new HashSet<>();
+
+    @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
+    @EqualsAndHashCode.Exclude
+    @Builder.Default
+    private Set<UserShow> userShows = new HashSet<>();
+
+    @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
+    @EqualsAndHashCode.Exclude
+    @Builder.Default
+    private Set<ShowActor> showActors = new HashSet<>();
 }

@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -26,8 +25,8 @@ class GenreServiceImplTest {
 
     @Test
     void getAllGenres_shouldReturnAllGenres() {
-        Genre action = Genre.builder().id(UUID.randomUUID()).name("action").build();
-        Genre fantasy = Genre.builder().id(UUID.randomUUID()).name("fantasy").build();
+        Genre action = Genre.builder().id(1L).name("action").build();
+        Genre fantasy = Genre.builder().id(2L).name("fantasy").build();
         List<Genre> expected = List.of(action, fantasy);
         when(genreRepository.findAll()).thenReturn(expected);
 

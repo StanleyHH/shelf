@@ -1,3 +1,5 @@
+import { Link } from 'react-router';
+
 import type Show from '../entities/Show.ts';
 import useCountries from '../hooks/useCountries.ts';
 import useGenres from '../hooks/useGenres.ts';
@@ -20,7 +22,11 @@ export default function ShowCard({ show }: Readonly<Props>) {
     .join(', ');
 
   return (
-    <div className="flex flex-col gap-1">
+    <Link
+      to={'/shows/' + show.id}
+      className="flex flex-col gap-1 transition-transform duration-150
+        ease-in-out hover:scale-[1.03]"
+    >
       <img
         className="h-25 object-contain"
         src={show.imageUrl}
@@ -33,6 +39,6 @@ export default function ShowCard({ show }: Readonly<Props>) {
       <p className="text-sm/4 text-[#999999]">
         {show.startYear} &#8226; {countryNames} &#8226; {genreNames}
       </p>
-    </div>
+    </Link>
   );
 }

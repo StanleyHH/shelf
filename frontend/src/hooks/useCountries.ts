@@ -4,12 +4,12 @@ import ms from 'ms';
 import type Country from '../entities/Country.ts';
 import ApiClient from '../services/apiClient.ts';
 
-const apiClient = new ApiClient<Country>('/countries');
+const apiClient = new ApiClient('/countries');
 
 const useCountries = () =>
   useQuery({
     queryKey: ['countries'],
-    queryFn: apiClient.getList,
+    queryFn: apiClient.getList<Country>,
     staleTime: ms('10m'),
   });
 

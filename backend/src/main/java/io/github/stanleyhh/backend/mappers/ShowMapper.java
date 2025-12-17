@@ -1,5 +1,6 @@
 package io.github.stanleyhh.backend.mappers;
 
+import io.github.stanleyhh.backend.domain.dtos.ShowDetailsResponseDto;
 import io.github.stanleyhh.backend.domain.dtos.ShowListResponseDto;
 import io.github.stanleyhh.backend.domain.entities.Country;
 import io.github.stanleyhh.backend.domain.entities.Genre;
@@ -11,7 +12,6 @@ import org.mapstruct.ReportingPolicy;
 
 import java.time.LocalDate;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -22,20 +22,22 @@ public interface ShowMapper {
     @Mapping(target = "genres", source = "genres", qualifiedByName = "getGenresIds")
     ShowListResponseDto toShowListResponseDto(Show show);
 
+    ShowDetailsResponseDto toBaseDetailsDto(Show show);
+
     @Named("getStartYear")
     default Integer getStartYear(LocalDate firstAirDate) {
         return firstAirDate.getYear();
     }
 
     @Named("getCountriesIds")
-    default Set<UUID> getCountriesIds(Set<Country> countries) {
+    default Set<Long> getCountriesIds(Set<Country> countries) {
         return countries.stream()
                 .map(Country::getId)
                 .collect(Collectors.toSet());
     }
 
     @Named("getGenresIds")
-    default Set<UUID> getGenresIds(Set<Genre> genres) {
+    default Set<Long> getGenresIds(Set<Genre> genres) {
         return genres.stream()
                 .map(Genre::getId)
                 .collect(Collectors.toSet());
