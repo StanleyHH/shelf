@@ -182,6 +182,7 @@ public class DataSeeder implements CommandLineRunner {
                     .imageUrl(images.getFirst())
                     .network(faker.name().firstName())
                     .imdbRating(imdbRating)
+                    .imdbVotesCount(faker.random().nextInt(1000, 50000))
                     .description(faker.lorem().paragraph(10))
                     .build();
 

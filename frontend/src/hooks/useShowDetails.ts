@@ -25,7 +25,7 @@ interface Actor {
   role: string;
 }
 
-interface ShowDetails {
+export interface ShowDetails {
   id: number;
   title: string;
   status: 'ONGOING' | 'ON_BREAK' | 'ENDED';
@@ -34,7 +34,14 @@ interface ShowDetails {
   imageUrl: string;
   network: string;
   imdbRating: number;
+  imdbVotesCount: number;
   description: string;
+  averageRating: number;
+  averageRatingVotesCount: number;
+  watchedBy: number;
+  usersTotal: number;
+  averageEpisodeRuntime: number;
+  totalRuntime: number;
   countries: Country[];
   genres: Genre[];
   seasons: Season[];

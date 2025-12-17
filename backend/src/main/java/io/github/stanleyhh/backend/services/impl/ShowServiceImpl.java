@@ -10,6 +10,8 @@ import io.github.stanleyhh.backend.domain.dtos.ShowQueryParams;
 import io.github.stanleyhh.backend.domain.entities.Episode;
 import io.github.stanleyhh.backend.domain.entities.Season;
 import io.github.stanleyhh.backend.domain.entities.Show;
+import io.github.stanleyhh.backend.domain.entities.UserShow;
+import io.github.stanleyhh.backend.domain.enums.UserShowStatus;
 import io.github.stanleyhh.backend.domain.specifications.ShowSpecs;
 import io.github.stanleyhh.backend.mappers.CountryMapper;
 import io.github.stanleyhh.backend.mappers.EpisodeMapper;
@@ -20,6 +22,8 @@ import io.github.stanleyhh.backend.mappers.ShowMapper;
 import io.github.stanleyhh.backend.repositories.EpisodeRepository;
 import io.github.stanleyhh.backend.repositories.SeasonRepository;
 import io.github.stanleyhh.backend.repositories.ShowRepository;
+import io.github.stanleyhh.backend.repositories.UserRepository;
+import io.github.stanleyhh.backend.repositories.UserShowRepository;
 import io.github.stanleyhh.backend.services.ShowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +31,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.IntSummaryStatistics;
 import java.util.List;
 
 @Service
@@ -41,6 +46,8 @@ public class ShowServiceImpl implements ShowService {
     private final CountryMapper countryMapper;
     private final GenreMapper genreMapper;
     private final ShowActorMapper showActorMapper;
+    private final UserShowRepository userShowRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Page<Show> searchShows(ShowQueryParams params, Pageable pageable) {
@@ -98,6 +105,32 @@ public class ShowServiceImpl implements ShowService {
         List<ActorRoleDto> showActors = show.getShowActors().stream().map(showActorMapper::toDto).toList();
         responseDto.setActors(showActors);
 
+        List<UserShow> userShows = userShowRepository.findAllByShow(show);
+        double averageRating = userShows.stream().mapToInt(UserShow::getRating).average().orElse(0);
+        responseDto.setAverageRating(averageRating);
+        responseDto.setAverageRatingVotesCount(userShows.size());
+
+        long usersTotal = userRepository.count();
+        responseDto.setUsersTotal((int) usersTotal);
+
+        List<UserShow> userShowsWatching = userShowRepository.findAllByShowAndStatus(show, UserShowStatus.WATCHING);
+        responseDto.setWatchedBy(userShowsWatching.size());
+
+        IntSummaryStatistics stats = seasons.stream()
+                .flatMap(season ->
+                        episodeRepository.findAllBySeasonId(season.getId()).stream()
+                )
+                .mapToInt(Episode::getRuntime)
+                .summaryStatistics();
+
+        int totalRuntime = (int) stats.getSum();
+        int averageRuntime = (int) stats.getAverage();
+
+        responseDto.setTotalRuntime(totalRuntime);
+        responseDto.setAverageEpisodeRuntime(averageRuntime);
+
+
         return responseDto;
     }
 }
+

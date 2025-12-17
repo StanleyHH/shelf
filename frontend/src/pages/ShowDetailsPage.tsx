@@ -1,4 +1,5 @@
 import { Rating, ThinStar } from '@smastrom/react-rating';
+import humanizeDuration from 'humanize-duration';
 import { useParams } from 'react-router';
 
 import yourAd from '../assets/your_ad.jpg';
@@ -10,7 +11,7 @@ import FilterLink from '../components/FilterLink.tsx';
 import SecondSidebarContainer from '../components/SecondSidebarContainer.tsx';
 import ShowStatusBar from '../components/ShowStatusBar.tsx';
 import ShowStatusLabel from '../components/ShowStatusLabel.tsx';
-import useShowDetails from '../hooks/useShowDetails.ts';
+import useShowDetails, { type ShowDetails } from '../hooks/useShowDetails.ts';
 import useShowQueryStore from '../store.ts';
 
 const ratingStyle = {
@@ -18,6 +19,25 @@ const ratingStyle = {
   activeFillColor: '#c10007',
   inactiveFillColor: '#cccccc',
 };
+
+function getFirstAirDate(show: ShowDetails) {
+  const firstSeason = show.seasons.at(-1);
+  const firstEpisode = firstSeason?.episodes.at(-1);
+  return firstEpisode?.releaseDate;
+}
+
+function getLastAirDate(show: ShowDetails) {
+  if (show.status !== 'ENDED') {
+    return '...';
+  }
+  return show.seasons[0].episodes[0].releaseDate;
+}
+
+function getEpisodesQuantity(show: ShowDetails) {
+  return show.seasons.reduce((total, season) => {
+    return total + season.episodes.length;
+  }, 0);
+}
 
 export default function ShowDetailsPage() {
   const setCountry = useShowQueryStore((s) => s.setCountryName);
@@ -59,8 +79,8 @@ export default function ShowDetailsPage() {
         </div>
 
         <div className="relative flex-1 text-2xl">
-          4.26
-          <Counter value="23" />
+          {show.averageRating.toPrecision(2)}
+          <Counter value={show.averageRatingVotesCount} />
         </div>
       </div>
 
@@ -68,7 +88,7 @@ export default function ShowDetailsPage() {
         <div className="flex">
           <div className="flex-1 text-neutral-400">Original Air Dates:</div>
           <div className="flex-1">
-            {show.firstAirDate} — {show.lastAirDate}
+            {getFirstAirDate(show)} — {getLastAirDate(show)}
           </div>
         </div>
         <div className="flex">
@@ -104,27 +124,31 @@ export default function ShowDetailsPage() {
         <div className="flex">
           <div className="flex-1 text-neutral-400">Watched by:</div>
           <div className="relative flex-1">
-            44
-            <Counter value="122" />
+            {show.watchedBy}
+            <Counter value={show.usersTotal} />
           </div>
         </div>
         <div className="flex">
           <div className="flex-1 text-neutral-400">Total running time:</div>
-          <div className="flex-1">1 day 14 minutes</div>
+          <div className="flex-1">
+            {humanizeDuration(show.totalRuntime * 60 * 1000, { largest: 3 })}
+          </div>
         </div>
         <div className="flex">
           <div className="flex-1 text-neutral-400">Episode duration:</div>
-          <div className="flex-1">25 min.</div>
+          <div className="flex-1">{show.averageEpisodeRuntime} min.</div>
         </div>
         <div className="flex">
           <div className="flex-1 text-neutral-400">Episodes:</div>
-          <div className="flex-1">59</div>
+          <div className="flex-1">{getEpisodesQuantity(show)}</div>
         </div>
         <div className="flex">
           <div className="flex-1 text-neutral-400">IMDB Rating:</div>
           <div className="relative flex-1">
             {show.imdbRating} of 10
-            <Counter value="34 909" />
+            <Counter
+              value={new Intl.NumberFormat('en-En').format(show.imdbVotesCount)}
+            />
           </div>
         </div>
       </div>

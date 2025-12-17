@@ -21,7 +21,15 @@ public class ShowDetailsResponseDto {
     private String imageUrl;
     private String network;
     private float imdbRating;
+    private int imdbVotesCount;
     private String description;
+    private double averageRating;
+    private int averageRatingVotesCount;
+    private int watchedBy;
+    private int usersTotal;
+    private int totalTime;
+    private int averageEpisodeRuntime;
+    private int totalRuntime;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private LocalDate firstAirDate;
@@ -33,6 +41,4 @@ public class ShowDetailsResponseDto {
     private List<CountryDto> countries;
     private List<GenreDto> genres;
     private List<ActorRoleDto> actors;
-
-
 }

@@ -62,6 +62,8 @@ public class Show {
 
     private float imdbRating;
 
+    private int imdbVotesCount;
+
     @Column(columnDefinition = "TEXT")
     private String description;
 
