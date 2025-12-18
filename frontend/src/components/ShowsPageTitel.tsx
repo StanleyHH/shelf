@@ -6,7 +6,7 @@ export default function ShowsPageTitel() {
   const year = useShowQueryStore((s) => s.showQuery.year);
 
   return (
-    <p className="mt-2 text-3xl">
+    <p className="mt-2 text-2xl">
       {country && <span>{country} -</span>} {genre} TV Shows{' '}
       {year && <span>of {year}</span>}
     </p>

@@ -43,7 +43,7 @@ export default function ShowDetailsPage() {
   const setCountry = useShowQueryStore((s) => s.setCountryName);
   const setGenre = useShowQueryStore((s) => s.setGenreName);
 
-  const { id } = useParams();
+  const { showId: id } = useParams();
   const { data: show, isLoading, error } = useShowDetails(id!);
 
   if (isLoading) return '';
@@ -61,7 +61,7 @@ export default function ShowDetailsPage() {
       />
 
       <div className="flex items-center gap-1">
-        <p className="mt-2 text-3xl">{show.title}</p>
+        <p className="mt-2 text-2xl">{show.title}</p>
         <ShowStatusLabel status={show.status} />
       </div>
 
