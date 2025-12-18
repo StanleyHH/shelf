@@ -69,7 +69,7 @@ public class DataSeeder implements CommandLineRunner {
     private final List<UserShow> userShows = new ArrayList<>();
 
     private static final Integer SHOWS_QUANTITY = 50;
-    private static final Integer USERS_QUANTITY = 1000;
+    private static final Integer USERS_QUANTITY = 100;
 
     List<String> images = new ArrayList<>();
 
