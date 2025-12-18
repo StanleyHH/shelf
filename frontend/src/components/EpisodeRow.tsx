@@ -1,5 +1,6 @@
 import { Rating, ThinStar } from '@smastrom/react-rating';
 import { MdModeComment } from 'react-icons/md';
+import { Link } from 'react-router';
 
 import type { Episode } from '../hooks/useShowDetails.ts';
 import EpisodeWatchLabel from './EpisodeWatchLabel.tsx';
@@ -23,12 +24,13 @@ export default function EpisodeRow({ isChecked, episode }: Readonly<Props>) {
     >
       <div className="flex items-center justify-between gap-5">
         <div className="text-xs font-bold">{episode.number}</div>
-        <div
+        <Link
+          to={'episodes/' + episode.id}
           className={`cursor-pointer text-base hover:underline
             ${isChecked ? 'text-neutral-400' : 'text-sky-600'}`}
         >
           {episode.title}
-        </div>
+        </Link>
       </div>
       <div className="flex items-center gap-3">
         <div className="text-sm text-neutral-400">{episode.releaseDate}</div>

@@ -21,7 +21,7 @@ export default function ActorDetailsPage() {
         navLinks={[{ label: 'Home', to: '/' }, { label: actor.name }]}
       />
 
-      <p className="mt-2 text-3xl">{actor.name}</p>
+      <p className="mt-2 text-2xl">{actor.name}</p>
 
       <div className="mt-5 flex items-start gap-8">
         <div className="w-60">

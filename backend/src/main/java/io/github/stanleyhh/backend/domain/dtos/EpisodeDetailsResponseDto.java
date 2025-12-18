@@ -27,4 +27,5 @@ public class EpisodeDetailsResponseDto {
     private Integer averageRatingVotesCount;
     private Integer watchedBy;
     private String watchedByPercent;
+    private ShowTitleDto show;
 }

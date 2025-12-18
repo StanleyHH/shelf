@@ -1,6 +1,7 @@
 package io.github.stanleyhh.backend.services.impl;
 
 import io.github.stanleyhh.backend.domain.dtos.EpisodeDetailsResponseDto;
+import io.github.stanleyhh.backend.domain.dtos.ShowTitleDto;
 import io.github.stanleyhh.backend.domain.entities.Episode;
 import io.github.stanleyhh.backend.domain.entities.Show;
 import io.github.stanleyhh.backend.domain.entities.UserEpisode;
@@ -61,6 +62,8 @@ public class EpisodeServiceImpl implements EpisodeService {
 
         String watchedByPercent = String.format(Locale.US, "%.2f%%", (episodeWatchedBy * 100.0) / showWatchedBy);
         responseDto.setWatchedByPercent(watchedByPercent);
+
+        responseDto.setShow(ShowTitleDto.builder().id(show.getId()).title(show.getTitle()).build());
 
         return responseDto;
     }
