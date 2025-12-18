@@ -72,7 +72,7 @@ class ActorControllerTest {
                 .andExpect(jsonPath("$.gender").value("male"))
                 .andExpect(jsonPath("$.biography").value("very good"))
                 .andExpect(jsonPath("$.image").value("actorImage"))
-                .andExpect(jsonPath("$.birthDate").value("1980-01-01"))
+                .andExpect(jsonPath("$.birthDate").value("01.01.1980"))
                 .andExpect(jsonPath("$.shows").isArray())
                 .andExpect(jsonPath("$.shows.length()").value(1))
                 .andExpect(jsonPath("$.shows[0].title").value("Terminator"))
