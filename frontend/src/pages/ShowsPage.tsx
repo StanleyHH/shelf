@@ -8,7 +8,12 @@ import ShowsPageTitel from '../components/ShowsPageTitel.tsx';
 export default function ShowsPage() {
   return (
     <>
-      <Breadcrumb />
+      <Breadcrumb
+        navLinks={[
+          { label: 'Home', to: '/' },
+          { label: 'Shows', to: '/shows' },
+        ]}
+      />
       <ShowsPageTitel />
       <ShowsPageSearch />
       <ShowGrid />

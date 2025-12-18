@@ -1,25 +1,29 @@
 import { Link } from 'react-router';
 
-interface Props {
-  currentPage?: string;
+interface BreadCrumbNavLink {
+  label: string;
+  to?: string;
 }
 
-export default function Breadcrumb({ currentPage }: Readonly<Props>) {
+interface Props {
+  navLinks: BreadCrumbNavLink[];
+}
+
+export default function Breadcrumb({ navLinks }: Readonly<Props>) {
   return (
-    <div className="flex text-sm">
-      <Link to="/shows" className="text-sky-600 hover:underline">
-        Home
-      </Link>
-      <span className="mx-2 text-neutral-400">&gt;</span>
-      <Link to="/shows" className="text-sky-600 hover:underline">
-        Shows
-      </Link>
-      {currentPage === 'showDetails' && (
-        <div>
-          <span className="mx-2 text-neutral-400">&gt;</span>
-          <span className="text-neutral-400">Solar Opposites</span>
+    <nav className="flex text-sm">
+      {navLinks.map((item, index) => (
+        <div key={item.label} className="flex items-center">
+          {index > 0 && <span className="mx-2 text-neutral-400">&gt;</span>}
+          {item.to ? (
+            <Link to={item.to} className="text-sky-600 hover:underline">
+              {item.label}
+            </Link>
+          ) : (
+            <span className="text-neutral-400">{item.label}</span>
+          )}
         </div>
-      )}
-    </div>
+      ))}
+    </nav>
   );
 }

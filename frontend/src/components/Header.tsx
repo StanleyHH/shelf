@@ -41,7 +41,9 @@ export default function Header() {
 
           <div className={`flex grow text-center ${isSearch ? 'hidden' : ''}`}>
             <div className="grow text-center text-neutral-400">
-              <span className="cursor-pointer text-white">Shows</span>{' '}
+              <span className="cursor-pointer text-white">
+                <Link to="/shows">Shows</Link>
+              </span>{' '}
               &nbsp;&nbsp; | &nbsp;&nbsp; Movies &nbsp;&nbsp; | &nbsp;&nbsp;
               Games &nbsp;&nbsp; | &nbsp;&nbsp; Books &nbsp;&nbsp; |
               &nbsp;&nbsp; Collections
