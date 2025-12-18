@@ -68,8 +68,8 @@ public class DataSeeder implements CommandLineRunner {
     private final List<User> users = new ArrayList<>();
     private final List<UserShow> userShows = new ArrayList<>();
 
-    private static final Integer SHOWS_QUANTITY = 10;
-    private static final Integer USERS_QUANTITY = 10;
+    private static final Integer SHOWS_QUANTITY = 50;
+    private static final Integer USERS_QUANTITY = 1000;
 
     List<String> images = new ArrayList<>();
 
@@ -306,7 +306,7 @@ public class DataSeeder implements CommandLineRunner {
         }
         for (User user : users) {
             Collections.shuffle(shows);
-            for (int i = 0; i < faker.random().nextInt(1, 4); i++) {
+            for (int i = 0; i < faker.random().nextInt(1, SHOWS_QUANTITY / 4); i++) {
                 UserShowStatus[] statuses = UserShowStatus.values();
                 UserShow userShow = UserShow.builder()
                         .rating(faker.random().nextInt(1, 5))

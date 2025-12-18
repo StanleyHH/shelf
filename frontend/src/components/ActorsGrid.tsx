@@ -17,6 +17,7 @@ export function ActorsGrid({ actors }: Readonly<Props>) {
       {actorsToShow.map((actor) => (
         <ActorCard
           key={actor.id}
+          actorId={actor.id}
           name={actor.name}
           role={actor.role}
           image={actor.image}
@@ -26,7 +27,7 @@ export function ActorsGrid({ actors }: Readonly<Props>) {
       {!showAll && actors.length > 5 && (
         <button
           onClick={() => setShowAll(true)}
-          className="text-sky-600 hover:underline text-start cursor-pointer"
+          className="cursor-pointer text-start text-sky-600 hover:underline"
         >
           View All
         </button>
