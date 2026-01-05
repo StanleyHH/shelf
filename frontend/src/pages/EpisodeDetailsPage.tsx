@@ -1,10 +1,12 @@
 import { Rating, ThinStar } from '@smastrom/react-rating';
 import { useParams } from 'react-router';
 
+import yourAd from '../assets/your_ad.jpg';
 import Breadcrumb from '../components/Breadcrumb.tsx';
 import Counter from '../components/Counter.tsx';
 import EpisodeWatchLabel from '../components/EpisodeWatchLabel.tsx';
 import InfoRow from '../components/InfoRow.tsx';
+import SecondSidebarContainer from '../components/SecondSidebarContainer.tsx';
 import useEpisodeDetails from '../hooks/useEpisodesDetails.ts';
 
 const ratingStyle = {
@@ -72,6 +74,10 @@ export default function EpisodeDetailsPage() {
           </div>
         </InfoRow>
       </div>
+
+      <SecondSidebarContainer>
+        <img src={yourAd} alt="your_ad" />
+      </SecondSidebarContainer>
     </>
   );
 }
