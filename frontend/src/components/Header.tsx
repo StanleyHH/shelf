@@ -2,7 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { BsPersonFill } from 'react-icons/bs';
 import { IoSearchOutline } from 'react-icons/io5';
 import { RiBookShelfLine } from 'react-icons/ri';
+import Modal from 'react-modal';
 import { Link } from 'react-router';
+
+import LoginModal from './LoginModal.tsx';
+
+Modal.setAppElement('#root');
 
 export default function Header() {
   const [isSearch, setIsSearch] = useState(false);
@@ -25,6 +30,8 @@ export default function Header() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   return (
     <header
@@ -81,7 +88,13 @@ export default function Header() {
             gap-3 pl-5"
         >
           <BsPersonFill size={25} />
-          Log in
+          <button
+            onClick={() => setModalIsOpen(true)}
+            className="cursor-pointer hover:underline"
+          >
+            Log in
+          </button>
+          <LoginModal isOpen={modalIsOpen} onClick={setModalIsOpen} />
         </div>
       </div>
     </header>
