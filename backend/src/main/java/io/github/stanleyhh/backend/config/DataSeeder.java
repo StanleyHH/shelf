@@ -287,7 +287,10 @@ public class DataSeeder implements CommandLineRunner {
             return;
         }
         for (int i = 0; i < USERS_QUANTITY; i++) {
-            User user = userRepository.save(new User());
+            User user = userRepository.save(User
+                    .builder()
+                    .name("user" + i)
+                    .build());
             users.add(user);
         }
         log.info("The users table has been seeded successfully");
