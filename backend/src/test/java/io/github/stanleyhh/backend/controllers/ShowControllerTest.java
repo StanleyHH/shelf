@@ -252,7 +252,7 @@ class ShowControllerTest {
                         .build()
         );
 
-        User user = userRepository.save(User.builder().build());
+        User user = userRepository.save(User.builder().name("user").build());
 
         userShowRepository.save(
                 UserShow.builder()

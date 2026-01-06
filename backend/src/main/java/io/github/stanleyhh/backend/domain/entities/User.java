@@ -35,6 +35,11 @@ public class User {
     @SequenceGenerator(name = "user_id_seq_gen", sequenceName = "user_id_seq", allocationSize = 1)
     private Long id;
 
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
+
+    private String avatar;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     private Set<UserEpisode> userEpisodes = new HashSet<>();

@@ -60,13 +60,13 @@ class EpisodeControllerTest {
                 .build();
         show = showRepository.save(show);
 
-        User user1 = userRepository.save(new User());
-        User user2 = userRepository.save(new User());
-        User user3 = userRepository.save(new User());
-        User user4 = userRepository.save(new User());
-        User user5 = userRepository.save(new User());
-        User user6 = userRepository.save(new User());
-        User user7 = userRepository.save(new User());
+        User user1 = userRepository.save(User.builder().name("user1").build());
+        User user2 = userRepository.save(User.builder().name("user2").build());
+        User user3 = userRepository.save(User.builder().name("user3").build());
+        User user4 = userRepository.save(User.builder().name("user4").build());
+        User user5 = userRepository.save(User.builder().name("user5").build());
+        User user6 = userRepository.save(User.builder().name("user6").build());
+        User user7 = userRepository.save(User.builder().name("user7").build());
 
         UserShow userShow1 = UserShow.builder()
                 .id(new UserShowId(user1.getId(), show.getId()))
