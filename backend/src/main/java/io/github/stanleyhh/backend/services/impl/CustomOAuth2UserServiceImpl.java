@@ -12,22 +12,29 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CustomOAuth2UserServiceImpl extends DefaultOAuth2UserService implements CustomOAuth2UserService {
+public class CustomOAuth2UserServiceImpl
+        extends DefaultOAuth2UserService
+        implements CustomOAuth2UserService {
+
     private final UserRepository userRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest)
             throws OAuth2AuthenticationException {
 
-        OAuth2User oAuth2User = super.loadUser(userRequest);
+        OAuth2User oAuth2User = loadOAuthUser(userRequest);
 
-        String name = oAuth2User.getAttribute("login"); // GitHub username
+        String name = oAuth2User.getAttribute("login");
 
         if (userRepository.findByName(name).isEmpty()) {
             createAppUser(oAuth2User);
         }
 
         return oAuth2User;
+    }
+
+    protected OAuth2User loadOAuthUser(OAuth2UserRequest userRequest) {
+        return super.loadUser(userRequest);
     }
 
     private void createAppUser(OAuth2User oAuth2User) {
