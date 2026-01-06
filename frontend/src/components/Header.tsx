@@ -5,14 +5,24 @@ import { RiBookShelfLine } from 'react-icons/ri';
 import Modal from 'react-modal';
 import { Link } from 'react-router';
 
+import { useAuthStore } from '../authStore.ts';
 import LoginModal from './LoginModal.tsx';
 
 Modal.setAppElement('#root');
+
+function logout() {
+  const host =
+    globalThis.location.host === 'localhost:5173'
+      ? 'http://localhost:8080'
+      : globalThis.location.origin;
+  window.open(host + '/logout', '_self');
+}
 
 export default function Header() {
   const [isSearch, setIsSearch] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const searchRef = useRef<HTMLDivElement>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -32,6 +42,7 @@ export default function Header() {
   }, []);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const { user } = useAuthStore();
 
   return (
     <header
@@ -84,16 +95,54 @@ export default function Header() {
         </div>
 
         <div
-          className="flex w-(--filter-sidebar-width) cursor-pointer items-center
-            gap-3 pl-5"
+          className="relative flex w-(--filter-sidebar-width) items-center gap-3
+            pl-5"
         >
-          <BsPersonFill size={25} />
+          {user ? (
+            <img
+              src={user.attributes.avatar_url}
+              alt="avatar"
+              className="h-9 w-9 rounded-full object-cover"
+            />
+          ) : (
+            <BsPersonFill size={25} />
+          )}
+
           <button
-            onClick={() => setModalIsOpen(true)}
+            onClick={() => {
+              if (user) {
+                setIsMenuOpen((prev) => !prev);
+              } else {
+                setModalIsOpen(true);
+              }
+            }}
             className="cursor-pointer hover:underline"
           >
-            Log in
+            {user ? user.attributes.login : 'Log in'}
           </button>
+
+          {/* Dropdown menu */}
+          {user && isMenuOpen && (
+            <div
+              className="absolute top-full left-5 mt-2.5 w-32 rounded
+                bg-black-90"
+            >
+              <span
+                className="block w-full cursor-pointer px-4 py-2 text-left
+                  text-sm hover:text-neutral-400 hover:underline"
+              >
+                Settings
+              </span>
+              <button
+                onClick={logout}
+                className="block w-full cursor-pointer px-4 py-2 text-left
+                  text-sm hover:text-neutral-400 hover:underline"
+              >
+                Log out
+              </button>
+            </div>
+          )}
+
           <LoginModal isOpen={modalIsOpen} onClick={setModalIsOpen} />
         </div>
       </div>
