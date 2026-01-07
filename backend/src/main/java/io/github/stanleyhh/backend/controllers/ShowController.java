@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,7 +57,9 @@ public class ShowController {
     }
 
     @GetMapping(path = "/{show_id}")
-    ResponseEntity<ShowDetailsResponseDto> getShowDetails(@PathVariable("show_id") Long showId) {
-        return ResponseEntity.ok(showService.getShowDetails(showId));
+    ResponseEntity<ShowDetailsResponseDto> getShowDetails(
+            @PathVariable("show_id") Long showId,
+            @AuthenticationPrincipal OAuth2User user) {
+        return ResponseEntity.ok(showService.getShowDetails(showId, user));
     }
 }

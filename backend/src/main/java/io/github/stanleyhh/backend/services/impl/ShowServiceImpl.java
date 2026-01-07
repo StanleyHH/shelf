@@ -7,6 +7,7 @@ import io.github.stanleyhh.backend.domain.dtos.GenreDto;
 import io.github.stanleyhh.backend.domain.dtos.SeasonDto;
 import io.github.stanleyhh.backend.domain.dtos.ShowDetailsResponseDto;
 import io.github.stanleyhh.backend.domain.dtos.ShowQueryParams;
+import io.github.stanleyhh.backend.domain.dtos.UserShowDto;
 import io.github.stanleyhh.backend.domain.entities.Episode;
 import io.github.stanleyhh.backend.domain.entities.Season;
 import io.github.stanleyhh.backend.domain.entities.Show;
@@ -30,11 +31,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.IntSummaryStatistics;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -85,7 +88,7 @@ public class ShowServiceImpl implements ShowService {
 
     @Transactional
     @Override
-    public ShowDetailsResponseDto getShowDetails(Long id) {
+    public ShowDetailsResponseDto getShowDetails(Long id, OAuth2User oAuth2User) {
         Show show = showRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Show not found with id: " + id));
         ShowDetailsResponseDto responseDto = showMapper.toBaseDetailsDto(show);
@@ -133,8 +136,25 @@ public class ShowServiceImpl implements ShowService {
         responseDto.setTotalRuntime(totalRuntime);
         responseDto.setAverageEpisodeRuntime(averageRuntime);
 
+        if (oAuth2User != null) {
+            userRepository.findByName(oAuth2User.getAttribute("login"))
+                    .ifPresent(user -> {
+                        UserShowStatus status = userShowRepository
+                                .findByShowAndUser(show, user)
+                                .map(UserShow::getStatus)
+                                .orElse(UserShowStatus.NOT_WATCHING);
 
+                        responseDto.setUserData(
+                                UserShowDto.builder()
+                                        .status(status)
+                                        .rating(2)
+                                        .watchedEpisodes(Set.of(1L, 23L))
+                                        .build()
+                        );
+                    });
+        }
         return responseDto;
     }
+
 }
 
