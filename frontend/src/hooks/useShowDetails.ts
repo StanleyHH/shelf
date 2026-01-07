@@ -25,6 +25,12 @@ export interface Actor {
   role: string;
 }
 
+interface UserData {
+  status: 'WATCHING' | 'PLAN_TO_WATCH' | 'DROPPED' | 'NOT_WATCHING'
+  rating: number;
+  watchedEpisodes: number[];
+}
+
 export interface ShowDetails {
   id: number;
   title: string;
@@ -46,6 +52,7 @@ export interface ShowDetails {
   genres: Genre[];
   seasons: Season[];
   actors: Actor[];
+  userData: UserData;
 }
 
 const apiClient = new ApiClient('/shows');

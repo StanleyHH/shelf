@@ -68,10 +68,22 @@ export default function ShowDetailsPage() {
       <img className="mt-5 w-full" src={show.imageUrl} alt={show.title} />
 
       <div className="flex justify-between gap-px">
-        <ShowStatusBar label="Watching" />
-        <ShowStatusBar label="Plan to Watch" />
-        <ShowStatusBar label="Dropped" />
-        <ShowStatusBar label="Not Watching" isActive={true} />
+        <ShowStatusBar
+          label="Watching"
+          isActive={show.userData.status === 'WATCHING'}
+        />
+        <ShowStatusBar
+          label="Plan to Watch"
+          isActive={show.userData.status === 'PLAN_TO_WATCH'}
+        />
+        <ShowStatusBar
+          label="Dropped"
+          isActive={show.userData.status === 'DROPPED'}
+        />
+        <ShowStatusBar
+          label="Not Watching"
+          isActive={show.userData.status === 'NOT_WATCHING'}
+        />
       </div>
 
       <div className="mt-5 flex items-center justify-start">
