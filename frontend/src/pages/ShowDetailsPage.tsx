@@ -3,6 +3,7 @@ import humanizeDuration from 'humanize-duration';
 import { useParams } from 'react-router';
 
 import yourAd from '../assets/your_ad.jpg';
+import { useAuthStore } from '../authStore.ts';
 import { ActorsGrid } from '../components/ActorsGrid.tsx';
 import Breadcrumb from '../components/Breadcrumb.tsx';
 import Counter from '../components/Counter.tsx';
@@ -11,7 +12,8 @@ import FilterLink from '../components/FilterLink.tsx';
 import SecondSidebarContainer from '../components/SecondSidebarContainer.tsx';
 import ShowStatusBar from '../components/ShowStatusBar.tsx';
 import ShowStatusLabel from '../components/ShowStatusLabel.tsx';
-import useShowDetails, { type ShowDetails } from '../hooks/useShowDetails.ts';
+import useShowDetails, { type ShowDetails, type UserShowStatus, } from '../hooks/useShowDetails.ts';
+import { useUpdateShowStatus } from '../hooks/useUpdateShowStatus.ts';
 import useShowQueryStore from '../store.ts';
 
 const ratingStyle = {
@@ -43,8 +45,26 @@ export default function ShowDetailsPage() {
   const setCountry = useShowQueryStore((s) => s.setCountryName);
   const setGenre = useShowQueryStore((s) => s.setGenreName);
 
+  const { user } = useAuthStore();
   const { showId: id } = useParams();
   const { data: show, isLoading, error } = useShowDetails(id!);
+  const updateStatusMutation = useUpdateShowStatus(); // ← вот наш хук
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error || !show) throw error;
+
+  const userShowStatus = show.userData?.status ?? 'NOT_WATCHING';
+  const isAuthenticated = !!user;
+
+  const handleStatusChange = (newStatus: UserShowStatus) => {
+    if (!isAuthenticated) return;
+    if (newStatus === userShowStatus) return;
+
+    updateStatusMutation.mutate({
+      showId: String(show.id),
+      status: newStatus,
+    });
+  };
 
   if (isLoading) return '';
 
@@ -70,19 +90,23 @@ export default function ShowDetailsPage() {
       <div className="flex justify-between gap-px">
         <ShowStatusBar
           label="Watching"
-          isActive={show.userData.status === 'WATCHING'}
+          isActive={userShowStatus === 'WATCHING'}
+          onClick={() => handleStatusChange('WATCHING')}
         />
         <ShowStatusBar
           label="Plan to Watch"
-          isActive={show.userData.status === 'PLAN_TO_WATCH'}
+          isActive={userShowStatus === 'PLAN_TO_WATCH'}
+          onClick={() => handleStatusChange('PLAN_TO_WATCH')}
         />
         <ShowStatusBar
           label="Dropped"
-          isActive={show.userData.status === 'DROPPED'}
+          isActive={userShowStatus === 'DROPPED'}
+          onClick={() => handleStatusChange('DROPPED')}
         />
         <ShowStatusBar
           label="Not Watching"
-          isActive={show.userData.status === 'NOT_WATCHING'}
+          isActive={userShowStatus === 'NOT_WATCHING'}
+          onClick={() => handleStatusChange('NOT_WATCHING')}
         />
       </div>
 

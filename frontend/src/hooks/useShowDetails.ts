@@ -25,8 +25,14 @@ export interface Actor {
   role: string;
 }
 
+export type UserShowStatus =
+  | 'WATCHING'
+  | 'PLAN_TO_WATCH'
+  | 'DROPPED'
+  | 'NOT_WATCHING';
+
 interface UserData {
-  status: 'WATCHING' | 'PLAN_TO_WATCH' | 'DROPPED' | 'NOT_WATCHING'
+  status: UserShowStatus;
   rating: number;
   watchedEpisodes: number[];
 }
@@ -59,7 +65,7 @@ const apiClient = new ApiClient('/shows');
 
 const useShowDetails = (showId: number | string) =>
   useQuery({
-    queryKey: ['show', showId],
+    queryKey: ['show', String(showId)],
     queryFn: () => apiClient.getOne<ShowDetails>(showId),
     staleTime: ms('10m'),
   });
