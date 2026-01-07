@@ -11,7 +11,9 @@ import io.github.stanleyhh.backend.domain.dtos.UserShowDto;
 import io.github.stanleyhh.backend.domain.entities.Episode;
 import io.github.stanleyhh.backend.domain.entities.Season;
 import io.github.stanleyhh.backend.domain.entities.Show;
+import io.github.stanleyhh.backend.domain.entities.User;
 import io.github.stanleyhh.backend.domain.entities.UserShow;
+import io.github.stanleyhh.backend.domain.entities.embeddable.UserShowId;
 import io.github.stanleyhh.backend.domain.enums.UserShowStatus;
 import io.github.stanleyhh.backend.domain.specifications.ShowSpecs;
 import io.github.stanleyhh.backend.mappers.CountryMapper;
@@ -37,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.IntSummaryStatistics;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -156,5 +159,32 @@ public class ShowServiceImpl implements ShowService {
         return responseDto;
     }
 
+    @Override
+    @Transactional
+    public void updateUserShowStatus(Long showId, UserShowStatus status, OAuth2User oAuth2User) {
+        if (oAuth2User != null) {
+            Show show = showRepository.findById(showId)
+                    .orElseThrow(() -> new EntityNotFoundException("Show not found with id: " + showId));
+            String userName = oAuth2User.getAttribute("login");
+            User user = userRepository.findByName(userName)
+                    .orElseThrow(() -> new EntityNotFoundException("User not found with name: " + userName));
+            Optional<UserShow> userShow = userShowRepository.findByShowAndUser(show, user);
+            if (status == UserShowStatus.NOT_WATCHING) {
+                userShow.ifPresent(userShowRepository::delete);
+            } else {
+                UserShow userShowToSave = UserShow.builder()
+                        .user(user)
+                        .show(show)
+                        .status(status)
+                        .rating(0)
+                        .build();
+                if (userShow.isPresent()) {
+                    UserShowId userShowId = new UserShowId(user.getId(), show.getId());
+                    userShowToSave.setId(userShowId);
+                    userShowToSave.setRating(userShow.get().getRating());
+                }
+                userShowRepository.save(userShowToSave);
+            }
+        }
+    }
 }
-

@@ -5,6 +5,7 @@ import io.github.stanleyhh.backend.domain.dtos.ShowDetailsResponseDto;
 import io.github.stanleyhh.backend.domain.dtos.ShowListResponseDto;
 import io.github.stanleyhh.backend.domain.dtos.ShowQueryParams;
 import io.github.stanleyhh.backend.domain.entities.Show;
+import io.github.stanleyhh.backend.domain.enums.UserShowStatus;
 import io.github.stanleyhh.backend.mappers.ShowMapper;
 import io.github.stanleyhh.backend.services.ShowService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,9 +59,19 @@ public class ShowController {
     }
 
     @GetMapping(path = "/{show_id}")
-    ResponseEntity<ShowDetailsResponseDto> getShowDetails(
+    public ResponseEntity<ShowDetailsResponseDto> getShowDetails(
             @PathVariable("show_id") Long showId,
-            @AuthenticationPrincipal OAuth2User user) {
-        return ResponseEntity.ok(showService.getShowDetails(showId, user));
+            @AuthenticationPrincipal OAuth2User oAuth2User) {
+        return ResponseEntity.ok(showService.getShowDetails(showId, oAuth2User));
+    }
+
+    @PutMapping(path = "/{show_id}/{status}")
+    public ResponseEntity<Void> updateUserShowStatus(
+            @PathVariable("show_id") Long showId,
+            @PathVariable UserShowStatus status,
+            @AuthenticationPrincipal OAuth2User oAuth2User
+    ) {
+        showService.updateUserShowStatus(showId, status, oAuth2User);
+        return ResponseEntity.noContent().build();
     }
 }
