@@ -116,9 +116,14 @@ public class ShowServiceImpl implements ShowService {
         responseDto.setActors(showActors);
 
         List<UserShow> userShows = userShowRepository.findAllByShow(show);
-        double averageRating = userShows.stream().mapToInt(UserShow::getRating).average().orElse(0);
-        responseDto.setAverageRating(averageRating);
-        responseDto.setAverageRatingVotesCount(userShows.size());
+
+        IntSummaryStatistics ratingStats = userShows.stream()
+                .mapToInt(UserShow::getRating)
+                .filter(rating -> rating != 0)
+                .summaryStatistics();
+
+        responseDto.setAverageRating(ratingStats.getCount() == 0 ? 0 : ratingStats.getAverage());
+        responseDto.setAverageRatingVotesCount((int) ratingStats.getCount());
 
         long usersTotal = userRepository.count();
         responseDto.setUsersTotal((int) usersTotal);
@@ -126,15 +131,15 @@ public class ShowServiceImpl implements ShowService {
         List<UserShow> userShowsWatching = userShowRepository.findAllByShowAndStatus(show, UserShowStatus.WATCHING);
         responseDto.setWatchedBy(userShowsWatching.size());
 
-        IntSummaryStatistics stats = seasons.stream()
+        IntSummaryStatistics runtimeStats = seasons.stream()
                 .flatMap(season ->
                         episodeRepository.findAllBySeasonId(season.getId()).stream()
                 )
                 .mapToInt(Episode::getRuntime)
                 .summaryStatistics();
 
-        int totalRuntime = (int) stats.getSum();
-        int averageRuntime = (int) stats.getAverage();
+        int totalRuntime = (int) runtimeStats.getSum();
+        int averageRuntime = (int) runtimeStats.getAverage();
 
         responseDto.setTotalRuntime(totalRuntime);
         responseDto.setAverageEpisodeRuntime(averageRuntime);
@@ -146,11 +151,10 @@ public class ShowServiceImpl implements ShowService {
                                 .findByShowAndUser(show, user)
                                 .map(UserShow::getStatus)
                                 .orElse(UserShowStatus.NOT_WATCHING);
-
                         responseDto.setUserData(
                                 UserShowDto.builder()
                                         .status(status)
-                                        .rating(2)
+                                        .rating(0)
                                         .watchedEpisodes(Set.of(1L, 23L))
                                         .build()
                         );
