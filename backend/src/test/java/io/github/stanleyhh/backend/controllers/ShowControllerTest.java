@@ -35,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -407,4 +408,47 @@ class ShowControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    void updateUserShowRating_shouldUpdateExistingRating() throws Exception {
+        userShowRepository.save(
+                UserShow.builder()
+                        .user(user)
+                        .show(show1)
+                        .status(UserShowStatus.WATCHING)
+                        .rating(5)
+                        .id(new UserShowId(user.getId(), show1.getId()))
+                        .build()
+        );
+
+        mockMvc.perform(patch("/api/shows/{show_id}/rating",
+                        show1.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("3")
+                        .with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", user.getName())
+                        )))
+                .andExpect(status().isNoContent());
+
+        var userShow = userShowRepository.findByShowAndUser(show1, user);
+        assertTrue(userShow.isPresent());
+        assertEquals(3, userShow.get().getRating());
+    }
+
+    @Test
+    void updateUserShowRating_shouldAddNotExistingRating() throws Exception {
+
+        mockMvc.perform(patch("/api/shows/{show_id}/rating",
+                        show1.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("3")
+                        .with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", user.getName())
+                        )))
+                .andExpect(status().isNoContent());
+
+        var userShow = userShowRepository.findByShowAndUser(show1, user);
+        assertTrue(userShow.isPresent());
+        assertEquals(UserShowStatus.WATCHING, userShow.get().getStatus());
+        assertEquals(3, userShow.get().getRating());
+    }
 }

@@ -14,4 +14,6 @@ public interface ShowService {
     ShowDetailsResponseDto getShowDetails(Long id, OAuth2User user);
 
     void updateUserShowStatus(Long showId, UserShowStatus status, OAuth2User oAuth2User);
+
+    void updateUserShowRating(Long showId, Integer rating, OAuth2User oAuth2User);
 }
