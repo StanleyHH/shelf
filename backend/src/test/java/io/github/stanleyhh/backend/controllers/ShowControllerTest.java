@@ -7,6 +7,7 @@ import io.github.stanleyhh.backend.domain.entities.Season;
 import io.github.stanleyhh.backend.domain.entities.Show;
 import io.github.stanleyhh.backend.domain.entities.User;
 import io.github.stanleyhh.backend.domain.entities.UserShow;
+import io.github.stanleyhh.backend.domain.entities.embeddable.UserShowId;
 import io.github.stanleyhh.backend.domain.enums.ShowStatus;
 import io.github.stanleyhh.backend.domain.enums.UserShowStatus;
 import io.github.stanleyhh.backend.repositories.CountryRepository;
@@ -29,7 +30,12 @@ import java.time.LocalDate;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.hasItems;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -62,12 +68,16 @@ class ShowControllerTest {
     @Autowired
     private UserShowRepository userShowRepository;
 
+    private Show show1;
+    private User user;
+
 
     @BeforeEach
     void setup() {
         showRepository.deleteAll();
         genreRepository.deleteAll();
         countryRepository.deleteAll();
+        userRepository.deleteAll();
 
         Genre action = genreRepository.save(Genre.builder().name("Action").build());
         Genre drama = genreRepository.save(Genre.builder().name("Drama").build());
@@ -77,7 +87,7 @@ class ShowControllerTest {
         LocalDate date2023 = LocalDate.of(2023, 1, 1);
         LocalDate date2024 = LocalDate.of(2024, 1, 1);
 
-        Show show1 = Show.builder()
+        show1 = Show.builder()
                 .title("Breaking Action")
                 .originalTitle("Breaking Action")
                 .firstAirDate(date2023)
@@ -111,6 +121,13 @@ class ShowControllerTest {
                 .build();
 
         showRepository.saveAll(Set.of(show1, show2, show3));
+
+        user = User.builder()
+                .avatar("avatar")
+                .name("testUser")
+                .build();
+
+        userRepository.save(user);
     }
 
     @Test
@@ -252,11 +269,11 @@ class ShowControllerTest {
                         .build()
         );
 
-        User user = userRepository.save(User.builder().name("user").build());
+        User testUser = userRepository.save(User.builder().name("user").build());
 
         userShowRepository.save(
                 UserShow.builder()
-                        .user(user)
+                        .user(testUser)
                         .show(show)
                         .rating(8)
                         .status(UserShowStatus.WATCHING)
@@ -264,7 +281,11 @@ class ShowControllerTest {
         );
 
         mockMvc.perform(get("/api/shows/" + show.getId())
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", user.getName())
+                                .claim("avatar_url", user.getAvatar())
+                        )))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(show.getId()))
                 .andExpect(jsonPath("$.title").value("Terminator"))
@@ -292,4 +313,89 @@ class ShowControllerTest {
         mockMvc.perform(get("/1"))
                 .andExpect(status().isInternalServerError());
     }
+
+    @Test
+    void updateUserShowStatus_shouldCreateNewStatus() throws Exception {
+        mockMvc.perform(put("/api/shows/{show_id}/{status}",
+                        show1.getId(), UserShowStatus.WATCHING)
+                        .with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", user.getName())
+                                .claim("avatar_url", user.getAvatar())
+                        )))
+                .andExpect(status().isNoContent());
+
+        var userShow = userShowRepository.findByShowAndUser(show1, user);
+        assertTrue(userShow.isPresent());
+        assertEquals(UserShowStatus.WATCHING, userShow.get().getStatus());
+        assertEquals(0, userShow.get().getRating());
+    }
+
+    @Test
+    void updateUserShowStatus_shouldUpdateExistingStatus() throws Exception {
+        userShowRepository.save(
+                UserShow.builder()
+                        .user(user)
+                        .show(show1)
+                        .status(UserShowStatus.WATCHING)
+                        .rating(5)
+                        .id(new UserShowId(user.getId(), show1.getId()))
+                        .build()
+        );
+
+        mockMvc.perform(put("/api/shows/{show_id}/{status}",
+                        show1.getId(), UserShowStatus.PLAN_TO_WATCH)
+                        .with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", user.getName())
+                        )))
+                .andExpect(status().isNoContent());
+
+        var userShow = userShowRepository.findByShowAndUser(show1, user);
+        assertTrue(userShow.isPresent());
+        assertEquals(UserShowStatus.PLAN_TO_WATCH, userShow.get().getStatus());
+        assertEquals(5, userShow.get().getRating());
+    }
+
+    @Test
+    void updateUserShowStatus_shouldDeleteWhenNotWatching() throws Exception {
+        userShowRepository.save(
+                UserShow.builder()
+                        .user(user)
+                        .show(show1)
+                        .status(UserShowStatus.WATCHING)
+                        .rating(5)
+                        .id(new UserShowId(user.getId(), show1.getId()))
+                        .build()
+        );
+
+        mockMvc.perform(put("/api/shows/{show_id}/{status}",
+                        show1.getId(), UserShowStatus.NOT_WATCHING)
+                        .with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", user.getName())
+                        )))
+                .andExpect(status().isNoContent());
+
+        var userShow = userShowRepository.findByShowAndUser(show1, user);
+        assertFalse(userShow.isPresent());
+    }
+
+    @Test
+    void updateUserShowStatus_shouldReturn404WhenShowNotFound() throws Exception {
+        mockMvc.perform(put("/api/shows/{show_id}/{status}",
+                        999L, UserShowStatus.WATCHING)
+                        .with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", user.getName())
+                        )))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateUserShowStatus_shouldReturn404WhenUserNotFound() throws Exception {
+        mockMvc.perform(put("/api/shows/{show_id}/{status}",
+                        show1.getId(), UserShowStatus.WATCHING)
+                        .with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", "unknownUser")
+                        )))
+                .andExpect(status().isNotFound());
+    }
+
 }
