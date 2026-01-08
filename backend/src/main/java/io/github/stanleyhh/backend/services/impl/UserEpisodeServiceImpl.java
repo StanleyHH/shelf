@@ -58,4 +58,18 @@ public class UserEpisodeServiceImpl implements UserEpisodeService {
 
         userEpisodeRepository.saveAll(toSave);
     }
+
+    @Override
+    @Transactional
+    public void deleteMyEpisode(List<Long> episodeIds, OAuth2User oAuth2User) {
+        if (oAuth2User == null) {
+            throw new IllegalArgumentException("OAuth2User is null");
+        }
+
+        String userName = oAuth2User.getAttribute("login");
+        User user = userRepository.findByName(userName)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with name: " + userName));
+
+        userEpisodeRepository.deleteAllByUserAndEpisodeIdIn(user, episodeIds);
+    }
 }

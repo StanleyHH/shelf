@@ -17,4 +17,6 @@ public interface UserEpisodeRepository extends JpaRepository<UserEpisode, UserEp
     List<UserEpisode> findAllByUserAndEpisodeIn(User user, Collection<Episode> episodes);
 
     List<UserEpisode> findAllByUser(User user);
+
+    void deleteAllByUserAndEpisodeIdIn(User user, List<Long> episodeIds);
 }
