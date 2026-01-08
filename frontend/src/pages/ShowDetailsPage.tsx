@@ -13,6 +13,7 @@ import SecondSidebarContainer from '../components/SecondSidebarContainer.tsx';
 import ShowStatusBar from '../components/ShowStatusBar.tsx';
 import ShowStatusLabel from '../components/ShowStatusLabel.tsx';
 import useShowDetails, { type ShowDetails, type UserShowStatus, } from '../hooks/useShowDetails.ts';
+import { useUpdateShowRating } from '../hooks/useUpdateShowRating.ts';
 import { useUpdateShowStatus } from '../hooks/useUpdateShowStatus.ts';
 import useShowQueryStore from '../store.ts';
 
@@ -48,7 +49,8 @@ export default function ShowDetailsPage() {
   const { user } = useAuthStore();
   const { showId: id } = useParams();
   const { data: show, isLoading, error } = useShowDetails(id!);
-  const updateStatusMutation = useUpdateShowStatus(); // ← вот наш хук
+  const updateStatusMutation = useUpdateShowStatus();
+  const updateRatingMutation = useUpdateShowRating();
 
   if (isLoading) return <div>Loading...</div>;
   if (error || !show) throw error;
@@ -63,6 +65,15 @@ export default function ShowDetailsPage() {
     updateStatusMutation.mutate({
       showId: String(show.id),
       status: newStatus,
+    });
+  };
+
+  const handleRatingChange = (rating: number) => {
+    if (!isAuthenticated) return;
+
+    updateRatingMutation.mutate({
+      showId: String(show.id),
+      rating: rating,
     });
   };
 
@@ -115,7 +126,8 @@ export default function ShowDetailsPage() {
           <div className="text-xl font-bold">My Rating</div>
           <Rating
             style={{ maxWidth: 120 }}
-            value={0}
+            value={show.userData?.rating}
+            onChange={handleRatingChange}
             itemStyles={ratingStyle}
           />
         </div>
