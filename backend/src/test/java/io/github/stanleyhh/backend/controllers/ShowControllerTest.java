@@ -316,8 +316,10 @@ class ShowControllerTest {
 
     @Test
     void updateUserShowStatus_shouldCreateNewStatus() throws Exception {
-        mockMvc.perform(put("/api/shows/{show_id}/{status}",
-                        show1.getId(), UserShowStatus.WATCHING)
+        mockMvc.perform(put("/api/shows/{show_id}/status",
+                        show1.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("\"WATCHING\"")
                         .with(oidcLogin().userInfoToken(token -> token
                                 .claim("login", user.getName())
                                 .claim("avatar_url", user.getAvatar())
@@ -342,8 +344,10 @@ class ShowControllerTest {
                         .build()
         );
 
-        mockMvc.perform(put("/api/shows/{show_id}/{status}",
-                        show1.getId(), UserShowStatus.PLAN_TO_WATCH)
+        mockMvc.perform(put("/api/shows/{show_id}/status",
+                        show1.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("\"PLAN_TO_WATCH\"")
                         .with(oidcLogin().userInfoToken(token -> token
                                 .claim("login", user.getName())
                         )))
@@ -367,8 +371,10 @@ class ShowControllerTest {
                         .build()
         );
 
-        mockMvc.perform(put("/api/shows/{show_id}/{status}",
-                        show1.getId(), UserShowStatus.NOT_WATCHING)
+        mockMvc.perform(put("/api/shows/{show_id}/status",
+                        show1.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("\"NOT_WATCHING\"")
                         .with(oidcLogin().userInfoToken(token -> token
                                 .claim("login", user.getName())
                         )))
@@ -380,8 +386,9 @@ class ShowControllerTest {
 
     @Test
     void updateUserShowStatus_shouldReturn404WhenShowNotFound() throws Exception {
-        mockMvc.perform(put("/api/shows/{show_id}/{status}",
-                        999L, UserShowStatus.WATCHING)
+        mockMvc.perform(put("/api/shows/{show_id}/status", 999L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("\"WATCHING\"")
                         .with(oidcLogin().userInfoToken(token -> token
                                 .claim("login", user.getName())
                         )))
@@ -390,8 +397,10 @@ class ShowControllerTest {
 
     @Test
     void updateUserShowStatus_shouldReturn404WhenUserNotFound() throws Exception {
-        mockMvc.perform(put("/api/shows/{show_id}/{status}",
-                        show1.getId(), UserShowStatus.WATCHING)
+        mockMvc.perform(put("/api/shows/{show_id}/status",
+                        show1.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("\"WATCHING\"")
                         .with(oidcLogin().userInfoToken(token -> token
                                 .claim("login", "unknownUser")
                         )))

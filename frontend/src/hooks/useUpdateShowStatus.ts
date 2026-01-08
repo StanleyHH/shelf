@@ -14,7 +14,9 @@ export const useUpdateShowStatus = () => {
       showId: string;
       status: UserShowStatus;
     }) => {
-      return axios.put(`/api/shows/${showId}/${status}`);
+      return axios.put(`/api/shows/${showId}/status`, status, {
+        headers: { 'Content-Type': 'application/json' },
+      });
     },
 
     onMutate: async ({ showId, status }) => {
