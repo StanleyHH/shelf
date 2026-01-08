@@ -174,7 +174,7 @@ class ShowServiceImplTest {
 
         when(userRepository.count()).thenReturn(100L);
 
-        ShowDetailsResponseDto result = showService.getShowDetails(showId);
+        ShowDetailsResponseDto result = showService.getShowDetails(showId, null);
 
         assertNotNull(result);
         assertEquals(showId, result.getId());
@@ -201,7 +201,7 @@ class ShowServiceImplTest {
 
         EntityNotFoundException exception = assertThrows(
                 EntityNotFoundException.class,
-                () -> showService.getShowDetails(1L)
+                () -> showService.getShowDetails(1L, null)
         );
 
         assertEquals("Show not found with id: 1", exception.getMessage());

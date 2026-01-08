@@ -41,4 +41,6 @@ public class ShowDetailsResponseDto {
     private List<CountryDto> countries;
     private List<GenreDto> genres;
     private List<ActorRoleDto> actors;
+
+    private UserShowDto userData;
 }
