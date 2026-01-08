@@ -40,7 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -147,15 +146,19 @@ public class ShowServiceImpl implements ShowService {
         if (oAuth2User != null) {
             userRepository.findByName(oAuth2User.getAttribute("login"))
                     .ifPresent(user -> {
-                        UserShowStatus status = userShowRepository
-                                .findByShowAndUser(show, user)
+                        Optional<UserShow> userShow = userShowRepository
+                                .findByShowAndUser(show, user);
+                        UserShowStatus status = userShow
                                 .map(UserShow::getStatus)
                                 .orElse(UserShowStatus.NOT_WATCHING);
+                        Integer rating = userShow
+                                .map(UserShow::getRating)
+                                .orElse(0);
                         responseDto.setUserData(
                                 UserShowDto.builder()
                                         .status(status)
-                                        .rating(0)
-                                        .watchedEpisodes(Set.of(1L, 23L))
+                                        .rating(rating)
+                                        .watchedEpisodes(null)
                                         .build()
                         );
                     });
@@ -191,4 +194,32 @@ public class ShowServiceImpl implements ShowService {
             }
         }
     }
+
+    @Override
+    @Transactional
+    public void updateUserShowRating(Long showId, Integer rating, OAuth2User oAuth2User) {
+        if (oAuth2User == null) {
+            throw new IllegalArgumentException("OAuth2User is null");
+        }
+
+        String userName = oAuth2User.getAttribute("login");
+
+        Show show = showRepository.findById(showId)
+                .orElseThrow(() -> new EntityNotFoundException("Show not found with id: " + showId));
+
+        User user = userRepository.findByName(userName)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with name: " + userName));
+
+        UserShow userShow = userShowRepository
+                .findByShowAndUser(show, user)
+                .orElseGet(() -> UserShow.builder()
+                        .user(user)
+                        .show(show)
+                        .status(UserShowStatus.WATCHING)
+                        .build());
+
+        userShow.setRating(rating);
+        userShowRepository.save(userShow);
+    }
+
 }

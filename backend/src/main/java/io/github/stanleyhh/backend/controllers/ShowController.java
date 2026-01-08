@@ -15,8 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -65,13 +67,23 @@ public class ShowController {
         return ResponseEntity.ok(showService.getShowDetails(showId, oAuth2User));
     }
 
-    @PutMapping(path = "/{show_id}/{status}")
+    @PutMapping(path = "/{show_id}/status")
     public ResponseEntity<Void> updateUserShowStatus(
             @PathVariable("show_id") Long showId,
-            @PathVariable UserShowStatus status,
+            @RequestBody UserShowStatus status,
             @AuthenticationPrincipal OAuth2User oAuth2User
     ) {
         showService.updateUserShowStatus(showId, status, oAuth2User);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping(path = "/{show_id}/rating")
+    public ResponseEntity<Void> updateUserShowRating(
+            @PathVariable("show_id") Long showId,
+            @RequestBody Integer rating,
+            @AuthenticationPrincipal OAuth2User oAuth2User
+    ) {
+        showService.updateUserShowRating(showId, rating, oAuth2User);
         return ResponseEntity.noContent().build();
     }
 }

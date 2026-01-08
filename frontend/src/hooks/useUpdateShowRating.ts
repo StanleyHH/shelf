@@ -1,25 +1,25 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
-import type { ShowDetails, UserShowStatus } from './useShowDetails';
+import type { ShowDetails } from './useShowDetails';
 
-export const useUpdateShowStatus = () => {
+export const useUpdateShowRating = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
       showId,
-      status,
+      rating,
     }: {
       showId: string;
-      status: UserShowStatus;
+      rating: number;
     }) => {
-      return axios.put(`/api/shows/${showId}/status`, status, {
+      return axios.patch(`/api/shows/${showId}/rating`, rating, {
         headers: { 'Content-Type': 'application/json' },
       });
     },
 
-    onMutate: async ({ showId, status }) => {
+    onMutate: async ({ showId, rating }) => {
       const queryKey = ['show', showId];
       await queryClient.cancelQueries({ queryKey });
 
@@ -31,7 +31,7 @@ export const useUpdateShowStatus = () => {
           ...old,
           userData: {
             ...old.userData,
-            status,
+            rating,
           },
         };
       });
