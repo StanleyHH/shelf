@@ -12,7 +12,7 @@ import FilterLink from '../components/FilterLink.tsx';
 import SecondSidebarContainer from '../components/SecondSidebarContainer.tsx';
 import ShowStatusBar from '../components/ShowStatusBar.tsx';
 import ShowStatusLabel from '../components/ShowStatusLabel.tsx';
-import useShowDetails, { type ShowDetails, type UserShowStatus, } from '../hooks/useShowDetails.ts';
+import useShowDetails, { type Season, type ShowDetails, type UserShowStatus, } from '../hooks/useShowDetails.ts';
 import { useUpdateShowRating } from '../hooks/useUpdateShowRating.ts';
 import { useUpdateShowStatus } from '../hooks/useUpdateShowStatus.ts';
 import useShowQueryStore from '../store.ts';
@@ -75,6 +75,12 @@ export default function ShowDetailsPage() {
       showId: String(show.id),
       rating: rating,
     });
+  };
+
+  const isAllEpisodesWatched = (season: Season): boolean => {
+    return season.episodes.every((episode) =>
+      show.userData.watchedEpisodes.includes(episode.id),
+    );
   };
 
   if (isLoading) return '';
@@ -219,7 +225,11 @@ export default function ShowDetailsPage() {
 
       <div className="mt-15 text-xl font-bold">Episode Guide</div>
       {show.seasons.map((season) => (
-        <EpisodesBySeason season={season} isChecked={false} key={season.id} />
+        <EpisodesBySeason
+          season={season}
+          isChecked={isAllEpisodesWatched(season)}
+          key={season.id}
+        />
       ))}
 
       <SecondSidebarContainer>

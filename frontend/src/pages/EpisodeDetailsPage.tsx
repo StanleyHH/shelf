@@ -2,12 +2,14 @@ import { Rating, ThinStar } from '@smastrom/react-rating';
 import { useParams } from 'react-router';
 
 import yourAd from '../assets/your_ad.jpg';
+import { useAuthStore } from '../authStore.ts';
 import Breadcrumb from '../components/Breadcrumb.tsx';
 import Counter from '../components/Counter.tsx';
 import EpisodeWatchLabel from '../components/EpisodeWatchLabel.tsx';
 import InfoRow from '../components/InfoRow.tsx';
 import SecondSidebarContainer from '../components/SecondSidebarContainer.tsx';
 import useEpisodeDetails from '../hooks/useEpisodesDetails.ts';
+import { useUpdateUserEpisodeStatus } from '../hooks/useUpdateUserEpisodeStatus.ts';
 
 const ratingStyle = {
   itemShapes: ThinStar,
@@ -22,10 +24,24 @@ export default function EpisodeDetailsPage() {
     isLoading,
     error,
   } = useEpisodeDetails(showId + '/episodes/' + episodeId);
-
+  const { user } = useAuthStore();
+  const updateUserEpisodeStatusMutation = useUpdateUserEpisodeStatus();
+  const isAuthenticated = !!user;
   if (isLoading) return '';
 
   if (error || !episode) throw error;
+
+  const handleUserEpisodeStatusUpdate = (e: {
+    stopPropagation: () => void;
+  }) => {
+    e.stopPropagation();
+    if (!isAuthenticated) return;
+
+    updateUserEpisodeStatusMutation.mutate({
+      showId: String(showId),
+      episodeIds: [episode.id],
+    });
+  };
 
   return (
     <>
@@ -47,7 +63,10 @@ export default function EpisodeDetailsPage() {
 
       <div className="flex items-center border-b border-b-gray-200 py-5">
         <div className="flex flex-1 items-center gap-2">
-          <EpisodeWatchLabel isChecked={false} />
+          <EpisodeWatchLabel
+            isChecked={false}
+            onClick={handleUserEpisodeStatusUpdate}
+          />
           <Rating
             style={{ maxWidth: 110 }}
             value={0}
