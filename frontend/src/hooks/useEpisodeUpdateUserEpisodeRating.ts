@@ -23,7 +23,7 @@ export const useEpisodeUpdateUserEpisodeRating = () => {
       const queryKey = ['episodes', showId + '/episodes/' + episodeId];
       await queryClient.cancelQueries({ queryKey });
 
-      const previousShow = queryClient.getQueryData<EpisodeDetails>(queryKey);
+      const previousEpisode = queryClient.getQueryData<EpisodeDetails>(queryKey);
 
       queryClient.setQueryData(queryKey, (old?: EpisodeDetails) => {
         if (!old?.userData?.rating) return old;
@@ -37,19 +37,19 @@ export const useEpisodeUpdateUserEpisodeRating = () => {
         };
       });
 
-      return { previousShow };
+      return { previousEpisode };
     },
 
     onError: (_err, { showId }, context) => {
       const queryKey = ['show', showId];
-      if (context?.previousShow) {
-        queryClient.setQueryData(queryKey, context.previousShow);
+      if (context?.previousEpisode) {
+        queryClient.setQueryData(queryKey, context.previousEpisode);
       }
     },
 
     onSettled: (_data, _error, { showId, episodeId }) => {
-      void queryClient.invalidateQueries({ queryKey: ['show', showId] });
-      void queryClient.invalidateQueries({
+      queryClient.invalidateQueries({ queryKey: ['show', showId] });
+      queryClient.invalidateQueries({
         queryKey: ['episodes', `${showId}/episodes/${episodeId}`],
       });
     },

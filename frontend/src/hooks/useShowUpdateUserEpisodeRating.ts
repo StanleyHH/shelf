@@ -52,8 +52,8 @@ export const useShowUpdateUserEpisodeRating = () => {
     },
 
     onSettled: (_data, _error, { showId, episodeId }) => {
-      void queryClient.invalidateQueries({ queryKey: ['show', showId] });
-      void queryClient.invalidateQueries({
+      queryClient.invalidateQueries({ queryKey: ['show', showId] });
+      queryClient.invalidateQueries({
         queryKey: ['episodes', `${showId}/episodes/${episodeId}`],
       });
     },

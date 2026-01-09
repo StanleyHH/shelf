@@ -93,7 +93,7 @@ export default function EpisodeDetailsPage() {
           <Rating
             style={{ maxWidth: 110 }}
             onChange={handleRatingUpdate}
-            value={episode.userData.rating}
+            value={episode.userData?.rating}
             itemStyles={ratingStyle}
           />
         </div>
