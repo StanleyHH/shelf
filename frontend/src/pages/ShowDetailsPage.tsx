@@ -79,7 +79,7 @@ export default function ShowDetailsPage() {
 
   const isAllEpisodesWatched = (season: Season): boolean => {
     return season.episodes.every((episode) =>
-      show.userData.watchedEpisodes.includes(episode.id),
+      show.userData?.watchedEpisodes.includes(episode.id),
     );
   };
 

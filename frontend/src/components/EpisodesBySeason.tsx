@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router';
 
 import { useAuthStore } from '../authStore.ts';
 import useShowDetails, { type Season } from '../hooks/useShowDetails.ts';
-import { useToggleUserEpisodes } from '../hooks/useToggleUserEpisode.ts';
+import { useToggleUserEpisodes } from '../hooks/useShowToggleUserEpisode.ts';
 import Counter from './Counter.tsx';
 import EpisodeRow from './EpisodeRow.tsx';
 import EpisodeWatchLabel from './EpisodeWatchLabel.tsx';

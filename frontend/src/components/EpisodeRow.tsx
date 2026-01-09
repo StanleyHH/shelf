@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router';
 
 import { useAuthStore } from '../authStore.ts';
 import useShowDetails, { type Episode } from '../hooks/useShowDetails.ts';
-import { useToggleUserEpisodes } from '../hooks/useToggleUserEpisode.ts';
+import { useToggleUserEpisodes } from '../hooks/useShowToggleUserEpisode.ts';
 import EpisodeWatchLabel from './EpisodeWatchLabel.tsx';
 
 interface Props {

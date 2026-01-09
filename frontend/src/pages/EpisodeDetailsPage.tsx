@@ -8,8 +8,8 @@ import Counter from '../components/Counter.tsx';
 import EpisodeWatchLabel from '../components/EpisodeWatchLabel.tsx';
 import InfoRow from '../components/InfoRow.tsx';
 import SecondSidebarContainer from '../components/SecondSidebarContainer.tsx';
+import { useToggleUserEpisodes } from '../hooks/useEpisodeToggleUserEpisode.ts';
 import useEpisodeDetails from '../hooks/useEpisodesDetails.ts';
-import { useToggleUserEpisodes } from '../hooks/useToggleUserEpisode.ts';
 
 const ratingStyle = {
   itemShapes: ThinStar,
@@ -39,8 +39,8 @@ export default function EpisodeDetailsPage() {
 
     toggleUserEpisodesMutation.mutate({
       showId: String(showId),
-      episodeIds: [episode.id],
-      isChecked: true,
+      episodeId: episode.id,
+      isChecked: episode.userData.watched,
     });
   };
 
@@ -65,7 +65,7 @@ export default function EpisodeDetailsPage() {
       <div className="flex items-center border-b border-b-gray-200 py-5">
         <div className="flex flex-1 items-center gap-2">
           <EpisodeWatchLabel
-            isChecked={false}
+            isChecked={episode.userData?.watched}
             onClick={handleUserEpisodeStatusUpdate}
           />
           <Rating

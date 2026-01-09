@@ -57,8 +57,13 @@ export const useToggleUserEpisodes = () => {
       }
     },
 
-    onSettled: (_data, _error, { showId }) => {
+    onSettled: (_data, _error, { showId, episodeIds }) => {
       void queryClient.invalidateQueries({ queryKey: ['show', showId] });
+      episodeIds.forEach((episodeId) => {
+        void queryClient.invalidateQueries({
+          queryKey: ['episodes', showId + '/episodes/' + episodeId],
+        });
+      });
     },
   });
 };
