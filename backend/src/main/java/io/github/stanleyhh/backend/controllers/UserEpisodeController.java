@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,16 @@ public class UserEpisodeController {
             @RequestBody List<Long> episodeIds,
             @AuthenticationPrincipal OAuth2User oAuth2User) {
         userEpisodeService.deleteMyEpisode(episodeIds, oAuth2User);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping(path = "/{episode_id}/rating")
+    public ResponseEntity<Void> updateMyEpisodeRating(
+            @PathVariable("episode_id") Long episodeId,
+            @RequestBody Integer rating,
+            @AuthenticationPrincipal OAuth2User oAuth2User
+    ) {
+        userEpisodeService.updateMyEpisodeRating(episodeId, rating, oAuth2User);
         return ResponseEntity.noContent().build();
     }
 }

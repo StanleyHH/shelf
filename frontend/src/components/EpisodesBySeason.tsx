@@ -80,7 +80,9 @@ export default function EpisodesBySeason({
               <EpisodeRow
                 episode={episode}
                 isChecked={
-                  show?.userData?.watchedEpisodes.includes(episode.id) ?? false
+                  show?.userData?.watchedEpisodes.some(
+                    (we) => we.id === episode.id,
+                  ) ?? false
                 }
                 key={episode.id}
               />

@@ -49,7 +49,7 @@ public class EpisodeServiceImpl implements EpisodeService {
 
         List<UserEpisode> userEpisodes = userEpisodeRepository.findAllByEpisode(episode);
         IntSummaryStatistics ratingsStatistics = userEpisodes.stream()
-                .filter(userEpisode -> userEpisode.getRating() != null)
+                .filter(userEpisode -> userEpisode.getRating() != null && !userEpisode.getRating().equals(0))
                 .mapToInt(UserEpisode::getRating)
                 .summaryStatistics();
 

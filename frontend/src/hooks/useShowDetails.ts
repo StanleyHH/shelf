@@ -31,10 +31,15 @@ export type UserShowStatus =
   | 'DROPPED'
   | 'NOT_WATCHING';
 
+interface WatchedEpisode {
+  id: number;
+  rating: number;
+}
+
 interface UserData {
   status: UserShowStatus;
   rating: number;
-  watchedEpisodes: number[];
+  watchedEpisodes: WatchedEpisode[];
 }
 
 export interface ShowDetails {

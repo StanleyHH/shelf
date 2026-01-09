@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router';
 import { useAuthStore } from '../authStore.ts';
 import useShowDetails, { type Episode } from '../hooks/useShowDetails.ts';
 import { useToggleUserEpisodes } from '../hooks/useShowToggleUserEpisode.ts';
+import { useShowUpdateUserEpisodeRating } from '../hooks/useShowUpdateUserEpisodeRating.ts';
 import EpisodeWatchLabel from './EpisodeWatchLabel.tsx';
 
 interface Props {
@@ -26,6 +27,7 @@ export default function EpisodeRow({ isChecked, episode }: Readonly<Props>) {
   if (error || !show) throw error;
 
   const toggleUserEpisodesMutation = useToggleUserEpisodes();
+  const updateRatingMutation = useShowUpdateUserEpisodeRating();
   const isAuthenticated = !!user;
 
   const handleUserEpisodeStatusUpdate = () => {
@@ -35,6 +37,29 @@ export default function EpisodeRow({ isChecked, episode }: Readonly<Props>) {
       showId: String(show.id),
       episodeIds: [episode.id],
       isChecked,
+    });
+  };
+
+  const handleRatingUpdate = (newRating: number) => {
+    if (!isAuthenticated) return;
+
+    const currentEpisode = show.userData?.watchedEpisodes.find(
+      (e) => e.id === episode.id,
+    );
+    const currentRating = currentEpisode?.rating ?? 0;
+
+    if (currentRating > 0 && newRating === 0) {
+      return;
+    }
+
+    if (newRating === currentRating) {
+      return;
+    }
+
+    updateRatingMutation.mutate({
+      showId: String(show.id),
+      episodeId: episode.id,
+      rating: newRating,
     });
   };
 
@@ -66,7 +91,15 @@ export default function EpisodeRow({ isChecked, episode }: Readonly<Props>) {
           </div>
         </div>
 
-        <Rating style={{ maxWidth: 110 }} value={0} itemStyles={ratingStyle} />
+        <Rating
+          style={{ maxWidth: 110 }}
+          onChange={handleRatingUpdate}
+          value={
+            show.userData?.watchedEpisodes.find((e) => e.id === episode.id)
+              ?.rating ?? 0
+          }
+          itemStyles={ratingStyle}
+        />
         <EpisodeWatchLabel
           isChecked={isChecked}
           onClick={handleUserEpisodeStatusUpdate}

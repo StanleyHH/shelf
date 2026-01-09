@@ -9,6 +9,7 @@ import EpisodeWatchLabel from '../components/EpisodeWatchLabel.tsx';
 import InfoRow from '../components/InfoRow.tsx';
 import SecondSidebarContainer from '../components/SecondSidebarContainer.tsx';
 import { useToggleUserEpisodes } from '../hooks/useEpisodeToggleUserEpisode.ts';
+import { useEpisodeUpdateUserEpisodeRating } from '../hooks/useEpisodeUpdateUserEpisodeRating.ts';
 import useEpisodeDetails from '../hooks/useEpisodesDetails.ts';
 
 const ratingStyle = {
@@ -26,6 +27,7 @@ export default function EpisodeDetailsPage() {
   } = useEpisodeDetails(showId + '/episodes/' + episodeId);
   const { user } = useAuthStore();
   const toggleUserEpisodesMutation = useToggleUserEpisodes();
+  const updateRatingMutation = useEpisodeUpdateUserEpisodeRating();
   const isAuthenticated = !!user;
   if (isLoading) return '';
 
@@ -41,6 +43,26 @@ export default function EpisodeDetailsPage() {
       showId: String(showId),
       episodeId: episode.id,
       isChecked: episode.userData.watched,
+    });
+  };
+
+  const handleRatingUpdate = (newRating: number) => {
+    if (!isAuthenticated) return;
+
+    const currentRating = episode.userData?.rating ?? 0;
+
+    if (currentRating > 0 && newRating === 0) {
+      return;
+    }
+
+    if (newRating === currentRating) {
+      return;
+    }
+
+    updateRatingMutation.mutate({
+      showId: String(showId),
+      episodeId: episode.id,
+      rating: newRating,
     });
   };
 
@@ -70,7 +92,8 @@ export default function EpisodeDetailsPage() {
           />
           <Rating
             style={{ maxWidth: 110 }}
-            value={0}
+            onChange={handleRatingUpdate}
+            value={episode.userData?.rating}
             itemStyles={ratingStyle}
           />
         </div>
