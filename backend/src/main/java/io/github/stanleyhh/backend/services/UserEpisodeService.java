@@ -8,4 +8,6 @@ public interface UserEpisodeService {
     void addMyEpisode(List<Long> episodeIds, OAuth2User oAuth2User);
 
     void deleteMyEpisode(List<Long> episodeIds, OAuth2User oAuth2User);
+
+    void updateMyEpisodeRating(Long episodeId, Integer rating, OAuth2User oAuth2User);
 }
