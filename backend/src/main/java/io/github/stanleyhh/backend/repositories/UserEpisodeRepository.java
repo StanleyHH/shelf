@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface UserEpisodeRepository extends JpaRepository<UserEpisode, UserEpisodeId> {
     boolean existsBy();
@@ -19,4 +20,6 @@ public interface UserEpisodeRepository extends JpaRepository<UserEpisode, UserEp
     List<UserEpisode> findAllByUser(User user);
 
     void deleteAllByUserAndEpisodeIdIn(User user, List<Long> episodeIds);
+
+    Optional<UserEpisode> findByEpisodeAndUser(Episode episode, User user);
 }

@@ -28,4 +28,6 @@ public class EpisodeDetailsResponseDto {
     private Integer watchedBy;
     private String watchedByPercent;
     private ShowTitleDto show;
+
+    private UserEpisodeDto userData;
 }

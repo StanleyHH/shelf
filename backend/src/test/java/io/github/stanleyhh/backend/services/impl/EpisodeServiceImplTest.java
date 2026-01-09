@@ -127,7 +127,7 @@ class EpisodeServiceImplTest {
         when(userShowRepository.findAllByShow(show))
                 .thenReturn(List.of(userShow1, userShow2, userShow3, userShow4, userShow5, userShow6, userShow7));
 
-        EpisodeDetailsResponseDto result = episodeService.getEpisodeDetails(show.getId(), episode.getId());
+        EpisodeDetailsResponseDto result = episodeService.getEpisodeDetails(show.getId(), episode.getId(), null);
 
         assertEquals(episode.getId(), result.getId());
         assertEquals(episode.getNumber(), result.getEpisodeNumber());
@@ -148,7 +148,7 @@ class EpisodeServiceImplTest {
 
         EntityNotFoundException exception = assertThrows(
                 EntityNotFoundException.class,
-                () -> episodeService.getEpisodeDetails(1L, 1L)
+                () -> episodeService.getEpisodeDetails(1L, 1L, null)
         );
 
         assertEquals("Episode not found with id: 1", exception.getMessage());
@@ -164,7 +164,7 @@ class EpisodeServiceImplTest {
 
         EntityNotFoundException exception = assertThrows(
                 EntityNotFoundException.class,
-                () -> episodeService.getEpisodeDetails(2L, 1L)
+                () -> episodeService.getEpisodeDetails(2L, 1L, null)
         );
 
         assertEquals("Episode with id 1 not found for show with id 2", exception.getMessage());
