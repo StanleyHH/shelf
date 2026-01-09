@@ -6,7 +6,9 @@ import io.github.stanleyhh.backend.domain.entities.Genre;
 import io.github.stanleyhh.backend.domain.entities.Season;
 import io.github.stanleyhh.backend.domain.entities.Show;
 import io.github.stanleyhh.backend.domain.entities.User;
+import io.github.stanleyhh.backend.domain.entities.UserEpisode;
 import io.github.stanleyhh.backend.domain.entities.UserShow;
+import io.github.stanleyhh.backend.domain.entities.embeddable.UserEpisodeId;
 import io.github.stanleyhh.backend.domain.entities.embeddable.UserShowId;
 import io.github.stanleyhh.backend.domain.enums.ShowStatus;
 import io.github.stanleyhh.backend.domain.enums.UserShowStatus;
@@ -15,6 +17,7 @@ import io.github.stanleyhh.backend.repositories.EpisodeRepository;
 import io.github.stanleyhh.backend.repositories.GenreRepository;
 import io.github.stanleyhh.backend.repositories.SeasonRepository;
 import io.github.stanleyhh.backend.repositories.ShowRepository;
+import io.github.stanleyhh.backend.repositories.UserEpisodeRepository;
 import io.github.stanleyhh.backend.repositories.UserRepository;
 import io.github.stanleyhh.backend.repositories.UserShowRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,6 +75,9 @@ class ShowControllerTest {
     private Show show1;
     private User user;
 
+    @Autowired
+    private UserEpisodeRepository userEpisodeRepository;
+
 
     @BeforeEach
     void setup() {
@@ -121,7 +127,8 @@ class ShowControllerTest {
                 .countries(Set.of(usa, uk))
                 .build();
 
-        showRepository.saveAll(Set.of(show1, show2, show3));
+        show1 = showRepository.save(show1);
+        showRepository.saveAll(Set.of(show2, show3));
 
         user = User.builder()
                 .avatar("avatar")
@@ -129,6 +136,31 @@ class ShowControllerTest {
                 .build();
 
         userRepository.save(user);
+
+        Season season = Season.builder()
+                .number(2L)
+                .show(show1)
+                .build();
+        season = seasonRepository.save(season);
+
+        Episode episode = Episode.builder()
+                .season(season)
+                .image("episodeImage")
+                .number(2L)
+                .releaseDate(LocalDate.of(2022, 4, 5))
+                .runtime(25)
+                .title("episodeTitle")
+                .build();
+        episode = episodeRepository.save(episode);
+
+        userEpisodeRepository.save(
+                UserEpisode.builder()
+                        .user(user)
+                        .episode(episode)
+                        .rating(5)
+                        .id(new UserEpisodeId(user.getId(), episode.getId()))
+                        .build()
+        );
     }
 
     @Test
@@ -313,6 +345,78 @@ class ShowControllerTest {
     void getShowDetails_shouldReturn500_whenApiNotExists() throws Exception {
         mockMvc.perform(get("/1"))
                 .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void getShowDetails_shouldIncludeUserWatchedEpisodes() throws Exception {
+        Show show = showRepository.save(
+                Show.builder()
+                        .title("Test Show for Episodes")
+                        .originalTitle("Test Show for Episodes")
+                        .firstAirDate(LocalDate.of(2025, 1, 1))
+                        .status(ShowStatus.ONGOING)
+                        .build()
+        );
+
+        Season season = seasonRepository.save(
+                Season.builder()
+                        .show(show)
+                        .number(1L)
+                        .build()
+        );
+
+        Episode ep1 = episodeRepository.save(
+                Episode.builder()
+                        .season(season)
+                        .number(1L)
+                        .title("Pilot")
+                        .runtime(45)
+                        .releaseDate(LocalDate.now())
+                        .build()
+        );
+
+        Episode ep2 = episodeRepository.save(
+                Episode.builder()
+                        .season(season)
+                        .number(2L)
+                        .title("Episode 2")
+                        .runtime(50)
+                        .releaseDate(LocalDate.now())
+                        .build()
+        );
+
+        userEpisodeRepository.save(
+                UserEpisode.builder()
+                        .user(user)
+                        .episode(ep1)
+                        .rating(7)
+                        .id(new UserEpisodeId(user.getId(), ep1.getId()))
+                        .build()
+        );
+
+        userEpisodeRepository.save(
+                UserEpisode.builder()
+                        .user(user)
+                        .episode(ep2)
+                        .rating(9)
+                        .id(new UserEpisodeId(user.getId(), ep2.getId()))
+                        .build()
+        );
+
+        mockMvc.perform(get("/api/shows/{id}", show.getId())
+                        .with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", user.getName())
+                        )))
+
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userData").exists())
+                .andExpect(jsonPath("$.userData.watchedEpisodes").isArray())
+                .andExpect(jsonPath("$.userData.watchedEpisodes.length()").value(2))
+
+                .andExpect(jsonPath("$.userData.watchedEpisodes[*].id",
+                        hasItems(ep1.getId().intValue(), ep2.getId().intValue())))
+                .andExpect(jsonPath("$.userData.watchedEpisodes[?(@.id == " + ep1.getId() + ")].rating").value(7))
+                .andExpect(jsonPath("$.userData.watchedEpisodes[?(@.id == " + ep2.getId() + ")].rating").value(9));
     }
 
     @Test
