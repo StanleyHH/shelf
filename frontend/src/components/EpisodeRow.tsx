@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router';
 
 import { useAuthStore } from '../authStore.ts';
 import useShowDetails, { type Episode } from '../hooks/useShowDetails.ts';
-import { useUpdateUserEpisodeStatus } from '../hooks/useUpdateUserEpisodeStatus.ts';
+import { useToggleUserEpisodes } from '../hooks/useToggleUserEpisode.ts';
 import EpisodeWatchLabel from './EpisodeWatchLabel.tsx';
 
 interface Props {
@@ -25,15 +25,16 @@ export default function EpisodeRow({ isChecked, episode }: Readonly<Props>) {
 
   if (error || !show) throw error;
 
-  const updateUserEpisodeStatusMutation = useUpdateUserEpisodeStatus();
+  const toggleUserEpisodesMutation = useToggleUserEpisodes();
   const isAuthenticated = !!user;
 
   const handleUserEpisodeStatusUpdate = () => {
     if (!isAuthenticated) return;
 
-    updateUserEpisodeStatusMutation.mutate({
+    toggleUserEpisodesMutation.mutate({
       showId: String(show.id),
       episodeIds: [episode.id],
+      isChecked,
     });
   };
 

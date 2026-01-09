@@ -1,24 +1,32 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
-import type { ShowDetails } from './useShowDetails.ts';
+import type { ShowDetails } from './useShowDetails';
 
-export const useUpdateUserEpisodeStatus = () => {
+interface Params {
+  showId: string;
+  episodeIds: number[];
+  isChecked: boolean;
+}
+
+export const useToggleUserEpisodes = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      episodeIds,
-    }: {
-      showId: string;
-      episodeIds: number[];
-    }) => {
+    mutationFn: async ({ episodeIds, isChecked }: Params) => {
+      if (isChecked) {
+        return axios.delete('/api/me/episodes', {
+          data: episodeIds,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+
       return axios.post('/api/me/episodes', episodeIds, {
         headers: { 'Content-Type': 'application/json' },
       });
     },
 
-    onMutate: async ({ showId, episodeIds }) => {
+    onMutate: async ({ showId, episodeIds, isChecked }) => {
       const queryKey = ['show', showId];
       await queryClient.cancelQueries({ queryKey });
 
@@ -26,11 +34,16 @@ export const useUpdateUserEpisodeStatus = () => {
 
       queryClient.setQueryData(queryKey, (old?: ShowDetails) => {
         if (!old?.userData) return old;
+
+        const currentIds = old.userData.watchedEpisodes ?? [];
+
         return {
           ...old,
           userData: {
             ...old.userData,
-            episodeIds,
+            episodeIds: isChecked
+              ? currentIds.filter((id) => !episodeIds.includes(id))
+              : [...new Set([...currentIds, ...episodeIds])],
           },
         };
       });
@@ -39,15 +52,13 @@ export const useUpdateUserEpisodeStatus = () => {
     },
 
     onError: (_err, { showId }, context) => {
-      const queryKey = ['show', showId];
       if (context?.previousShow) {
-        queryClient.setQueryData(queryKey, context.previousShow);
+        queryClient.setQueryData(['show', showId], context.previousShow);
       }
     },
 
     onSettled: (_data, _error, { showId }) => {
-      const queryKey = ['show', String(showId)];
-      void queryClient.invalidateQueries({ queryKey });
+      void queryClient.invalidateQueries({ queryKey: ['show', showId] });
     },
   });
 };

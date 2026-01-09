@@ -9,7 +9,7 @@ import EpisodeWatchLabel from '../components/EpisodeWatchLabel.tsx';
 import InfoRow from '../components/InfoRow.tsx';
 import SecondSidebarContainer from '../components/SecondSidebarContainer.tsx';
 import useEpisodeDetails from '../hooks/useEpisodesDetails.ts';
-import { useUpdateUserEpisodeStatus } from '../hooks/useUpdateUserEpisodeStatus.ts';
+import { useToggleUserEpisodes } from '../hooks/useToggleUserEpisode.ts';
 
 const ratingStyle = {
   itemShapes: ThinStar,
@@ -25,7 +25,7 @@ export default function EpisodeDetailsPage() {
     error,
   } = useEpisodeDetails(showId + '/episodes/' + episodeId);
   const { user } = useAuthStore();
-  const updateUserEpisodeStatusMutation = useUpdateUserEpisodeStatus();
+  const toggleUserEpisodesMutation = useToggleUserEpisodes();
   const isAuthenticated = !!user;
   if (isLoading) return '';
 
@@ -37,9 +37,10 @@ export default function EpisodeDetailsPage() {
     e.stopPropagation();
     if (!isAuthenticated) return;
 
-    updateUserEpisodeStatusMutation.mutate({
+    toggleUserEpisodesMutation.mutate({
       showId: String(showId),
       episodeIds: [episode.id],
+      isChecked: true,
     });
   };
 

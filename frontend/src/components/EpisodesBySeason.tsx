@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router';
 
 import { useAuthStore } from '../authStore.ts';
 import useShowDetails, { type Season } from '../hooks/useShowDetails.ts';
-import { useUpdateUserEpisodeStatus } from '../hooks/useUpdateUserEpisodeStatus.ts';
+import { useToggleUserEpisodes } from '../hooks/useToggleUserEpisode.ts';
 import Counter from './Counter.tsx';
 import EpisodeRow from './EpisodeRow.tsx';
 import EpisodeWatchLabel from './EpisodeWatchLabel.tsx';
@@ -22,7 +22,7 @@ export default function EpisodesBySeason({
   const { user } = useAuthStore();
   const { showId: id } = useParams();
   const { data: show, error } = useShowDetails(id!);
-  const updateUserEpisodeStatusMutation = useUpdateUserEpisodeStatus();
+  const toggleUserEpisodesMutation = useToggleUserEpisodes();
   const isAuthenticated = !!user;
 
   if (error || !show) throw error;
@@ -33,9 +33,10 @@ export default function EpisodesBySeason({
     e.stopPropagation();
     if (!isAuthenticated) return;
 
-    updateUserEpisodeStatusMutation.mutate({
+    toggleUserEpisodesMutation.mutate({
       showId: String(show.id),
       episodeIds: season.episodes.map((episode) => episode.id),
+      isChecked,
     });
   };
 
