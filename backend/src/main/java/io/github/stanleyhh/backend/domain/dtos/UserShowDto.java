@@ -15,5 +15,5 @@ import java.util.Set;
 public class UserShowDto {
     private UserShowStatus status;
     private Integer rating;
-    private Set<Long> watchedEpisodes;
+    private Set<UserShowEpisodeDto> watchedEpisodes;
 }

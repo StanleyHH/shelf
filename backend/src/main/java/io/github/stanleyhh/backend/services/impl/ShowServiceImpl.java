@@ -8,11 +8,11 @@ import io.github.stanleyhh.backend.domain.dtos.SeasonDto;
 import io.github.stanleyhh.backend.domain.dtos.ShowDetailsResponseDto;
 import io.github.stanleyhh.backend.domain.dtos.ShowQueryParams;
 import io.github.stanleyhh.backend.domain.dtos.UserShowDto;
+import io.github.stanleyhh.backend.domain.dtos.UserShowEpisodeDto;
 import io.github.stanleyhh.backend.domain.entities.Episode;
 import io.github.stanleyhh.backend.domain.entities.Season;
 import io.github.stanleyhh.backend.domain.entities.Show;
 import io.github.stanleyhh.backend.domain.entities.User;
-import io.github.stanleyhh.backend.domain.entities.UserEpisode;
 import io.github.stanleyhh.backend.domain.entities.UserShow;
 import io.github.stanleyhh.backend.domain.entities.embeddable.UserShowId;
 import io.github.stanleyhh.backend.domain.enums.UserShowStatus;
@@ -160,10 +160,16 @@ public class ShowServiceImpl implements ShowService {
                         Integer rating = userShow
                                 .map(UserShow::getRating)
                                 .orElse(0);
-                        Set<Long> watchedEpisodes = userEpisodeRepository.findAllByUser(user).stream()
-                                .map(UserEpisode::getEpisode)
-                                .filter(episode -> Objects.equals(episode.getSeason().getShow().getId(), id))
-                                .map(Episode::getId)
+                        Set<UserShowEpisodeDto> watchedEpisodes = userEpisodeRepository.findAllByUser(user).stream()
+                                .filter(userEpisode -> Objects.equals(userEpisode
+                                        .getEpisode()
+                                        .getSeason()
+                                        .getShow()
+                                        .getId(), id))
+                                .map(userEpisode -> UserShowEpisodeDto.builder()
+                                        .id(userEpisode.getEpisode().getId())
+                                        .rating(userEpisode.getRating())
+                                        .build())
                                 .collect(Collectors.toSet());
                         responseDto.setUserData(
                                 UserShowDto.builder()
