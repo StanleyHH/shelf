@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -163,7 +164,11 @@ class EpisodeControllerTest {
                 .build();
         userEpisodeRepository.saveAll(List.of(userEpisode1, userEpisode2, userEpisode3, userEpisode4, userEpisode5));
 
-        mockMvc.perform(get("/api/shows/1/episodes/1"))
+        mockMvc.perform(get("/api/shows/1/episodes/1")
+                        .with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", user1.getName())
+                        ))
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(episode.getId()))
                 .andExpect(jsonPath("$.episodeNumber").value(episode.getNumber()))

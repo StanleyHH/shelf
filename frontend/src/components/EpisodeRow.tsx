@@ -1,8 +1,10 @@
 import { Rating, ThinStar } from '@smastrom/react-rating';
 import { MdModeComment } from 'react-icons/md';
-import { Link } from 'react-router';
+import { Link, useParams } from 'react-router';
 
-import type { Episode } from '../hooks/useShowDetails.ts';
+import { useAuthStore } from '../authStore.ts';
+import useShowDetails, { type Episode } from '../hooks/useShowDetails.ts';
+import { useToggleUserEpisodes } from '../hooks/useShowToggleUserEpisode.ts';
 import EpisodeWatchLabel from './EpisodeWatchLabel.tsx';
 
 interface Props {
@@ -17,6 +19,25 @@ const ratingStyle = {
 };
 
 export default function EpisodeRow({ isChecked, episode }: Readonly<Props>) {
+  const { user } = useAuthStore();
+  const { showId: id } = useParams();
+  const { data: show, error } = useShowDetails(id!);
+
+  if (error || !show) throw error;
+
+  const toggleUserEpisodesMutation = useToggleUserEpisodes();
+  const isAuthenticated = !!user;
+
+  const handleUserEpisodeStatusUpdate = () => {
+    if (!isAuthenticated) return;
+
+    toggleUserEpisodesMutation.mutate({
+      showId: String(show.id),
+      episodeIds: [episode.id],
+      isChecked,
+    });
+  };
+
   return (
     <li
       className="flex items-center justify-between border-b border-b-gray-150
@@ -41,12 +62,15 @@ export default function EpisodeRow({ isChecked, episode }: Readonly<Props>) {
             className="absolute flex -translate-y-0.5 items-center
               justify-center text-[10px] text-white"
           >
-            23
+            0
           </div>
         </div>
 
         <Rating style={{ maxWidth: 110 }} value={0} itemStyles={ratingStyle} />
-        <EpisodeWatchLabel isChecked={isChecked} />
+        <EpisodeWatchLabel
+          isChecked={isChecked}
+          onClick={handleUserEpisodeStatusUpdate}
+        />
       </div>
     </li>
   );

@@ -4,6 +4,8 @@ import io.github.stanleyhh.backend.domain.dtos.EpisodeDetailsResponseDto;
 import io.github.stanleyhh.backend.services.EpisodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +21,9 @@ public class EpisodeController {
     @GetMapping(path = "/{episode_id}")
     ResponseEntity<EpisodeDetailsResponseDto> getEpisodeDetails(
             @PathVariable("show_id") Long showId,
-            @PathVariable("episode_id") Long episodeId
-    ) {
-        return ResponseEntity.ok(episodeService.getEpisodeDetails(showId, episodeId));
+            @PathVariable("episode_id") Long episodeId,
+            @AuthenticationPrincipal OAuth2User oAuth2User
+            ) {
+        return ResponseEntity.ok(episodeService.getEpisodeDetails(showId, episodeId, oAuth2User));
     }
 }

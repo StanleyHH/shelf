@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-import { Link } from 'react-router';
+import { Link, useParams } from 'react-router';
 
-import type { Season } from '../hooks/useShowDetails.ts';
+import { useAuthStore } from '../authStore.ts';
+import useShowDetails, { type Season } from '../hooks/useShowDetails.ts';
+import { useToggleUserEpisodes } from '../hooks/useShowToggleUserEpisode.ts';
 import Counter from './Counter.tsx';
 import EpisodeRow from './EpisodeRow.tsx';
 import EpisodeWatchLabel from './EpisodeWatchLabel.tsx';
@@ -17,6 +19,26 @@ export default function EpisodesBySeason({
   season,
 }: Readonly<Props>) {
   const [open, setOpen] = useState(false);
+  const { user } = useAuthStore();
+  const { showId: id } = useParams();
+  const { data: show, error } = useShowDetails(id!);
+  const toggleUserEpisodesMutation = useToggleUserEpisodes();
+  const isAuthenticated = !!user;
+
+  if (error || !show) throw error;
+
+  const handleUserEpisodeStatusUpdate = (e: {
+    stopPropagation: () => void;
+  }) => {
+    e.stopPropagation();
+    if (!isAuthenticated) return;
+
+    toggleUserEpisodesMutation.mutate({
+      showId: String(show.id),
+      episodeIds: season.episodes.map((episode) => episode.id),
+      isChecked,
+    });
+  };
 
   return (
     <div>
@@ -41,9 +63,10 @@ export default function EpisodesBySeason({
           ) : (
             <IoIosArrowDown size={22} className="text-gray-300" />
           )}
-          <button onClick={(e) => e.stopPropagation()}>
-            <EpisodeWatchLabel isChecked={isChecked} />
-          </button>
+          <EpisodeWatchLabel
+            isChecked={isChecked}
+            onClick={handleUserEpisodeStatusUpdate}
+          />
         </div>
       </div>
 
@@ -56,7 +79,9 @@ export default function EpisodesBySeason({
             {season.episodes.map((episode) => (
               <EpisodeRow
                 episode={episode}
-                isChecked={false}
+                isChecked={
+                  show?.userData?.watchedEpisodes.includes(episode.id) ?? false
+                }
                 key={episode.id}
               />
             ))}

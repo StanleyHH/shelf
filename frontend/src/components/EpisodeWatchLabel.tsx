@@ -1,13 +1,21 @@
+import * as React from 'react';
 import { FaRegCheckCircle, FaRegCircle } from 'react-icons/fa';
 import { FaCircleCheck } from 'react-icons/fa6';
 
 interface Props {
   isChecked: boolean;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export default function EpisodeWatchLabel({ isChecked }: Readonly<Props>) {
+export default function EpisodeWatchLabel({
+  isChecked,
+  onClick,
+}: Readonly<Props>) {
   return (
-    <div className="group flex cursor-pointer items-center gap-5">
+    <button
+      onClick={onClick}
+      className="group flex cursor-pointer items-center gap-5"
+    >
       {isChecked ? (
         <FaCircleCheck className="size-6 text-lime-600" />
       ) : (
@@ -18,6 +26,6 @@ export default function EpisodeWatchLabel({ isChecked }: Readonly<Props>) {
           />
         </>
       )}
-    </div>
+    </button>
   );
 }

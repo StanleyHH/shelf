@@ -12,6 +12,7 @@ import io.github.stanleyhh.backend.domain.entities.Episode;
 import io.github.stanleyhh.backend.domain.entities.Season;
 import io.github.stanleyhh.backend.domain.entities.Show;
 import io.github.stanleyhh.backend.domain.entities.User;
+import io.github.stanleyhh.backend.domain.entities.UserEpisode;
 import io.github.stanleyhh.backend.domain.entities.UserShow;
 import io.github.stanleyhh.backend.domain.entities.embeddable.UserShowId;
 import io.github.stanleyhh.backend.domain.enums.UserShowStatus;
@@ -25,6 +26,7 @@ import io.github.stanleyhh.backend.mappers.ShowMapper;
 import io.github.stanleyhh.backend.repositories.EpisodeRepository;
 import io.github.stanleyhh.backend.repositories.SeasonRepository;
 import io.github.stanleyhh.backend.repositories.ShowRepository;
+import io.github.stanleyhh.backend.repositories.UserEpisodeRepository;
 import io.github.stanleyhh.backend.repositories.UserRepository;
 import io.github.stanleyhh.backend.repositories.UserShowRepository;
 import io.github.stanleyhh.backend.services.ShowService;
@@ -39,7 +41,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.IntSummaryStatistics;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +60,7 @@ public class ShowServiceImpl implements ShowService {
     private final ShowActorMapper showActorMapper;
     private final UserShowRepository userShowRepository;
     private final UserRepository userRepository;
+    private final UserEpisodeRepository userEpisodeRepository;
 
     @Override
     public Page<Show> searchShows(ShowQueryParams params, Pageable pageable) {
@@ -154,11 +160,16 @@ public class ShowServiceImpl implements ShowService {
                         Integer rating = userShow
                                 .map(UserShow::getRating)
                                 .orElse(0);
+                        Set<Long> watchedEpisodes = userEpisodeRepository.findAllByUser(user).stream()
+                                .map(UserEpisode::getEpisode)
+                                .filter(episode -> Objects.equals(episode.getSeason().getShow().getId(), id))
+                                .map(Episode::getId)
+                                .collect(Collectors.toSet());
                         responseDto.setUserData(
                                 UserShowDto.builder()
                                         .status(status)
                                         .rating(rating)
-                                        .watchedEpisodes(null)
+                                        .watchedEpisodes(watchedEpisodes)
                                         .build()
                         );
                     });
