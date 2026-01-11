@@ -3,7 +3,7 @@ import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
 import { useAuthStore } from '../authStore.ts';
 import { type Season, type ShowDetails } from '../hooks/useShowDetails.ts';
-import { useToggleUserEpisodes } from '../hooks/useShowToggleUserEpisode.ts';
+import { type EpisodeChangePayload } from '../hooks/useShowToggleUserEpisode.ts';
 import Counter from './Counter.tsx';
 import EpisodeRow from './EpisodeRow.tsx';
 import EpisodeWatchLabel from './EpisodeWatchLabel.tsx';
@@ -12,16 +12,17 @@ interface Props {
   isChecked: boolean;
   season: Season;
   show: ShowDetails;
+  onEpisodeChange: (payload: EpisodeChangePayload) => void;
 }
 
 export default function EpisodesBySeason({
   isChecked,
   season,
   show,
+  onEpisodeChange,
 }: Readonly<Props>) {
   const [open, setOpen] = useState(false);
   const { user } = useAuthStore();
-  const toggleUserEpisodesMutation = useToggleUserEpisodes();
   const isAuthenticated = !!user;
 
   const handleUserEpisodeStatusUpdate = (e: {
@@ -30,7 +31,7 @@ export default function EpisodesBySeason({
     e.stopPropagation();
     if (!isAuthenticated) return;
 
-    toggleUserEpisodesMutation.mutate({
+    onEpisodeChange({
       showId: String(show.id),
       episodeIds: season.episodes.map((episode) => episode.id),
       isChecked,
@@ -78,6 +79,7 @@ export default function EpisodesBySeason({
                 }
                 key={episode.id}
                 show={show}
+                onEpisodeChange={onEpisodeChange}
               />
             ))}
           </ul>

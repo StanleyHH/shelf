@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import type { ShowDetails } from './useShowDetails';
 
-interface Params {
+export interface EpisodeChangePayload {
   showId: string;
   episodeIds: number[];
   isChecked: boolean;
@@ -13,7 +13,7 @@ export const useToggleUserEpisodes = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ episodeIds, isChecked }: Params) => {
+    mutationFn: async ({ episodeIds, isChecked }: EpisodeChangePayload) => {
       if (isChecked) {
         return axios.delete('/api/me/episodes', {
           data: episodeIds,
@@ -26,7 +26,11 @@ export const useToggleUserEpisodes = () => {
       });
     },
 
-    onMutate: async ({ showId, episodeIds, isChecked }: Params) => {
+    onMutate: async ({
+      showId,
+      episodeIds,
+      isChecked,
+    }: EpisodeChangePayload) => {
       const queryKey = ['show', showId];
 
       await queryClient.cancelQueries({ queryKey });
@@ -69,7 +73,7 @@ export const useToggleUserEpisodes = () => {
 
     onError: (
       _err: Error,
-      { showId }: Params,
+      { showId }: EpisodeChangePayload,
       previousShowContext?: { previousShow?: ShowDetails },
     ) => {
       if (previousShowContext?.previousShow) {
@@ -82,6 +86,7 @@ export const useToggleUserEpisodes = () => {
 
     onSettled: (_data, _error, { showId, episodeIds }) => {
       void queryClient.invalidateQueries({ queryKey: ['show', showId] });
+      void queryClient.invalidateQueries({ queryKey: ['my-shows'] });
 
       episodeIds.forEach((episodeId) => {
         void queryClient.invalidateQueries({

@@ -19,7 +19,7 @@ interface MyShowsPlanToWatch {
   totalSeasons: number;
 }
 
-interface MyShows {
+export interface MyShows {
   watching: MyShowsWatching[];
   planToWatch: MyShowsPlanToWatch[];
 }

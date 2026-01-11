@@ -13,6 +13,7 @@ import SecondSidebarContainer from '../components/SecondSidebarContainer.tsx';
 import ShowStatusBar from '../components/ShowStatusBar.tsx';
 import ShowStatusLabel from '../components/ShowStatusLabel.tsx';
 import useShowDetails, { type Season, type ShowDetails, type UserShowStatus, } from '../hooks/useShowDetails.ts';
+import { useToggleUserEpisodes } from '../hooks/useShowToggleUserEpisode.ts';
 import { useUpdateShowRating } from '../hooks/useUpdateShowRating.ts';
 import { useUpdateShowStatus } from '../hooks/useUpdateShowStatus.ts';
 import useShowQueryStore from '../store.ts';
@@ -51,6 +52,7 @@ export default function ShowDetailsPage() {
   const { data: show, isLoading, error } = useShowDetails(id!);
   const updateStatusMutation = useUpdateShowStatus();
   const updateRatingMutation = useUpdateShowRating();
+  const toggleUserEpisodesMutation = useToggleUserEpisodes();
 
   if (isLoading) return <div>Loading...</div>;
   if (error || !show) throw error;
@@ -230,6 +232,7 @@ export default function ShowDetailsPage() {
           isChecked={isAllEpisodesWatched(season)}
           key={season.id}
           show={show}
+          onEpisodeChange={toggleUserEpisodesMutation.mutate}
         />
       ))}
 

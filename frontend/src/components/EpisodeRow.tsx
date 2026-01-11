@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import { useAuthStore } from '../authStore.ts';
 import { type Episode, type ShowDetails } from '../hooks/useShowDetails.ts';
-import { useToggleUserEpisodes } from '../hooks/useShowToggleUserEpisode.ts';
+import { type EpisodeChangePayload } from '../hooks/useShowToggleUserEpisode.ts';
 import { useShowUpdateUserEpisodeRating } from '../hooks/useShowUpdateUserEpisodeRating.ts';
 import EpisodeWatchLabel from './EpisodeWatchLabel.tsx';
 
@@ -12,6 +12,7 @@ interface Props {
   isChecked: boolean;
   episode: Episode;
   show: ShowDetails;
+  onEpisodeChange: (payload: EpisodeChangePayload) => void;
 }
 
 const ratingStyle = {
@@ -24,17 +25,17 @@ export default function EpisodeRow({
   isChecked,
   episode,
   show,
+  onEpisodeChange,
 }: Readonly<Props>) {
   const { user } = useAuthStore();
 
-  const toggleUserEpisodesMutation = useToggleUserEpisodes();
   const updateRatingMutation = useShowUpdateUserEpisodeRating();
   const isAuthenticated = !!user;
 
   const handleUserEpisodeStatusUpdate = () => {
     if (!isAuthenticated) return;
 
-    toggleUserEpisodesMutation.mutate({
+    onEpisodeChange({
       showId: String(show.id),
       episodeIds: [episode.id],
       isChecked,
