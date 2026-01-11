@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-import { Link, useParams } from 'react-router';
 
 import { useAuthStore } from '../authStore.ts';
-import useShowDetails, { type Season } from '../hooks/useShowDetails.ts';
+import { type Season, type ShowDetails } from '../hooks/useShowDetails.ts';
 import { useToggleUserEpisodes } from '../hooks/useShowToggleUserEpisode.ts';
 import Counter from './Counter.tsx';
 import EpisodeRow from './EpisodeRow.tsx';
@@ -12,20 +11,18 @@ import EpisodeWatchLabel from './EpisodeWatchLabel.tsx';
 interface Props {
   isChecked: boolean;
   season: Season;
+  show: ShowDetails;
 }
 
 export default function EpisodesBySeason({
   isChecked,
   season,
+  show,
 }: Readonly<Props>) {
   const [open, setOpen] = useState(false);
   const { user } = useAuthStore();
-  const { showId: id } = useParams();
-  const { data: show, error } = useShowDetails(id!);
   const toggleUserEpisodesMutation = useToggleUserEpisodes();
   const isAuthenticated = !!user;
-
-  if (error || !show) throw error;
 
   const handleUserEpisodeStatusUpdate = (e: {
     stopPropagation: () => void;
@@ -48,15 +45,10 @@ export default function EpisodesBySeason({
         className="flex w-full cursor-pointer items-center justify-between
           border-b border-b-gray-150 py-4 pr-2"
       >
-        <Link
-          to="#"
-          className="relative cursor-pointer text-lg font-bold text-sky-600
-            hover:underline"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className="relative text-lg font-bold">
           Season {season.number}
           <Counter value={season.episodes.length} />
-        </Link>
+        </div>
         <div className="flex items-center gap-5">
           {open ? (
             <IoIosArrowUp size={22} className="text-gray-300" />
@@ -85,6 +77,7 @@ export default function EpisodesBySeason({
                   ) ?? false
                 }
                 key={episode.id}
+                show={show}
               />
             ))}
           </ul>

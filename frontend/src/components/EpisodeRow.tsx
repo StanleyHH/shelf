@@ -1,9 +1,9 @@
 import { Rating, ThinStar } from '@smastrom/react-rating';
 import { MdModeComment } from 'react-icons/md';
-import { Link, useParams } from 'react-router';
+import { Link } from 'react-router';
 
 import { useAuthStore } from '../authStore.ts';
-import useShowDetails, { type Episode } from '../hooks/useShowDetails.ts';
+import { type Episode, type ShowDetails } from '../hooks/useShowDetails.ts';
 import { useToggleUserEpisodes } from '../hooks/useShowToggleUserEpisode.ts';
 import { useShowUpdateUserEpisodeRating } from '../hooks/useShowUpdateUserEpisodeRating.ts';
 import EpisodeWatchLabel from './EpisodeWatchLabel.tsx';
@@ -11,6 +11,7 @@ import EpisodeWatchLabel from './EpisodeWatchLabel.tsx';
 interface Props {
   isChecked: boolean;
   episode: Episode;
+  show: ShowDetails;
 }
 
 const ratingStyle = {
@@ -19,12 +20,12 @@ const ratingStyle = {
   inactiveFillColor: '#cccccc',
 };
 
-export default function EpisodeRow({ isChecked, episode }: Readonly<Props>) {
+export default function EpisodeRow({
+  isChecked,
+  episode,
+  show,
+}: Readonly<Props>) {
   const { user } = useAuthStore();
-  const { showId: id } = useParams();
-  const { data: show, error } = useShowDetails(id!);
-
-  if (error || !show) throw error;
 
   const toggleUserEpisodesMutation = useToggleUserEpisodes();
   const updateRatingMutation = useShowUpdateUserEpisodeRating();
@@ -71,7 +72,7 @@ export default function EpisodeRow({ isChecked, episode }: Readonly<Props>) {
       <div className="flex items-center justify-between gap-5">
         <div className="text-xs font-bold">{episode.number}</div>
         <Link
-          to={'episodes/' + episode.id}
+          to={'/shows/' + show.id + '/episodes/' + episode.id}
           className={`cursor-pointer text-base hover:underline
             ${isChecked ? 'text-neutral-400' : 'text-sky-600'}`}
         >

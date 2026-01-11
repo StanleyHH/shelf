@@ -229,6 +229,7 @@ export default function ShowDetailsPage() {
           season={season}
           isChecked={isAllEpisodesWatched(season)}
           key={season.id}
+          show={show}
         />
       ))}
 
