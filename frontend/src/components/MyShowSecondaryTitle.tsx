@@ -2,7 +2,7 @@ import Counter from './Counter.tsx';
 
 interface Props {
   title: string;
-  quantity: string | number;
+  quantity: number;
   isActive?: boolean;
   onClick: () => void;
 }

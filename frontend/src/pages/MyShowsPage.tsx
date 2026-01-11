@@ -5,11 +5,15 @@ import Breadcrumb from '../components/Breadcrumb.tsx';
 import EpisodesBySeason from '../components/EpisodesBySeason.tsx';
 import MyShowSecondaryTitle from '../components/MyShowSecondaryTitle.tsx';
 import SecondSidebarContainer from '../components/SecondSidebarContainer.tsx';
-import useShowDetails from '../hooks/useShowDetails.ts';
+import ShowStatusLabel from '../components/ShowStatusLabel.tsx';
+import useMyShows from '../hooks/useMyShows.ts';
+import humanizeDuration from 'humanize-duration';
+import { Link } from 'react-router';
 
 export default function MyShows() {
   const [isWatchingActive, setIsWatchingActive] = useState(true);
-  const { data: show } = useShowDetails(3);
+  const { data: shows } = useMyShows();
+  console.log(shows)
 
   return (
     <>
@@ -21,30 +25,44 @@ export default function MyShows() {
       <div className="mt-5 flex gap-7">
         <MyShowSecondaryTitle
           title="Watching"
-          quantity="4"
+          quantity={shows?.watching.length ?? 0}
           isActive={isWatchingActive}
           onClick={() => setIsWatchingActive(true)}
         />
         <MyShowSecondaryTitle
           title="Plan to Watch"
-          quantity="12"
+          quantity={shows?.planToWatch.length ?? 0}
           isActive={!isWatchingActive}
           onClick={() => setIsWatchingActive(false)}
         />
       </div>
 
-      {isWatchingActive && (
-        <div className="ml-4">
-          {show?.seasons?.map((season) => (
-            <EpisodesBySeason
-              season={season}
-              isChecked={true}
-              key={season.id}
-              show={show}
-            />
-          ))}
-        </div>
-      )}
+      {isWatchingActive &&
+        shows?.watching.map((show) => {
+          return (
+            <div className="mt-5" key={show.id}>
+              <div className="flex justify-between" >
+                <div className="flex items-center gap-1">
+                  <Link className="text-xl font-bold text-sky-600 hover:underline" to={'/shows/' + show.id}>
+                    {show.title}
+                  </Link>
+                  <ShowStatusLabel status={show.status} />
+                </div>
+                <div className="text-sm">{humanizeDuration(show.totalTime * 60 * 1000, { largest: 3 })}</div>
+              </div>
+              <div className="ml-4">
+                {show?.seasons?.map((season) => (
+                  <EpisodesBySeason
+                    season={season}
+                    isChecked={true}
+                    key={season.id}
+                    show={show}
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        })}
       {!isWatchingActive && <div>Plan to Watch Shows</div>}
 
       <SecondSidebarContainer>

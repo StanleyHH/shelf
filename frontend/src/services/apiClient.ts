@@ -29,6 +29,9 @@ class ApiClient {
 
   getOne = async <T>(id: number | string) =>
     axiosInstance.get<T>(this.endpoint + '/' + id).then((res) => res.data);
+
+  getMyShows = async <T>() =>
+    axiosInstance.get<T>(this.endpoint).then((res) => res.data);
 }
 
 export default ApiClient;
