@@ -81,13 +81,15 @@ public class MyShowServiceImpl implements MyShowService {
                             seasonDtos.add(seasonDto);
                         }
 
-                        watching.add(MyShowWatchingDto.builder()
-                                .id(show.getId())
-                                .title(show.getTitle())
-                                .status(show.getStatus())
-                                .totalTime(totalTime)
-                                .seasons(seasonDtos)
-                                .build());
+                        if (!seasonDtos.isEmpty()) {
+                            watching.add(MyShowWatchingDto.builder()
+                                    .id(show.getId())
+                                    .title(show.getTitle())
+                                    .status(show.getStatus())
+                                    .totalTime(totalTime)
+                                    .seasons(seasonDtos)
+                                    .build());
+                        }
                     } else {
                         planToWatch.add(MyShowsPlanToWatchDto.builder()
                                 .id(show.getId())
