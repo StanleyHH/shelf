@@ -11,11 +11,19 @@ export default function MainSidebar() {
       className="fixed top-(--sidebar-y-indent) left-(--sidebar-x-indent)
         h-(--sidebar-height) w-(--main-sidebar-width) bg-gray-150"
     >
-      <MainSidebarItem Icon={PiMonitorPlayFill} label="My Shows" />
-      <MainSidebarItem Icon={RiMovie2Fill} label="My Movies" />
-      <MainSidebarItem Icon={IoGameController} label="My Games" />
-      <MainSidebarItem Icon={GiBookCover} label="My Books" />
-      <MainSidebarItem Icon={Gi3dGlasses} label="Profile" />
+      <MainSidebarItem
+        Icon={PiMonitorPlayFill}
+        label="My Shows"
+        to="/my-shows"
+      />
+      <MainSidebarItem Icon={RiMovie2Fill} label="My Movies" to="/my-movies" />
+      <MainSidebarItem
+        Icon={IoGameController}
+        label="My Games"
+        to="/my-games"
+      />
+      <MainSidebarItem Icon={GiBookCover} label="My Books" to="/my-books" />
+      <MainSidebarItem Icon={Gi3dGlasses} label="Profile" to="/profile" />
     </aside>
   );
 }
