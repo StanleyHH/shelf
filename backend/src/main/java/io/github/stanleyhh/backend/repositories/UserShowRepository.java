@@ -18,4 +18,6 @@ public interface UserShowRepository extends JpaRepository<UserShow, UserShowId> 
     List<UserShow> findAllByShowAndStatus(Show show, UserShowStatus status);
 
     Optional<UserShow> findByShowAndUser(Show show, User user);
+
+    List<UserShow> findAllByUser(User user);
 }
